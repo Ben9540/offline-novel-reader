@@ -261,7 +261,7 @@ function bgColorTLMInit(){
 
 async function loadLibraryIndex() {
     try {
-        const response = await fetch('Novel\ library/index.json');
+        const response = await fetch('Novel-Library/index.json');
         
         const indexData = await response.json();
         
@@ -683,7 +683,7 @@ async function fetchVolume() {
     const fileName = currentVolumeObj.fileName;
 
     try {
-        const response = await fetch('Novel\ Library/' + fileName);
+        const response = await fetch('Novel-Library/' + fileName);
         const volumeFetchData = await response.json();
         
         AppState.activeSession.loadedVolume = volumeFetchData;

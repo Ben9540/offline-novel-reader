@@ -7,7 +7,7 @@ const essentialFiles = [
     "style.css",
     "manifest.json",
     "temp_novelApp_cover.png",
-    "Novel Library/index.json"
+    "Novel-Library/index.json"
 ];
 
 self.addEventListener("install", (event) => {
