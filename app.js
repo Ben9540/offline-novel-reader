@@ -61,17 +61,22 @@ async function main(){
     registerServiceWorker();
     await allTLMInit();
     await loadLibraryIndex();
-    getFromLocalStorage()
+    volumeMenuInit();
+    getFromLocalStorage();
 }
 
 function mainMenuInit(){}
 
 function volumeMenuInit(){
     const backButton = document.getElementById("b_backFloat");
-    const downloadButton =document.getElementById("b_download");
+    const downloadButton = document.getElementById("b_volumeDownload");
 
-    downloadButton.addEventListener("pointerUp", () => {
+    downloadButton.addEventListener("pointerup", () => {
         toggleDownloadMode();
+    });
+
+    backButton.addEventListener("pointerup", () => {
+        viewSwitcher("mainMenu");
     });
 }
 
@@ -88,12 +93,22 @@ async function allTLMInit(){
 async function toggleDownloadMode() {
     AppState.activeSession.isDownloadMode = !AppState.activeSession.isDownloadMode;
     
-    const pillContainer = document.getElementById("volumeBottomContainer");
-    const allVolumeElements = document.querySelectorAll("#volumeMenuBooks .bookCover");
+    const pillContainer = document.getElementById("volumeButtonContainer");
+    const allVolumeElements = document.querySelectorAll(".volumeBookCover");
+
+    pillContainer.innerHTML = "";
 
     if (AppState.activeSession.isDownloadMode) {
         // 1. Update the pill UI to hide search/download
-        pillContainer.classList.add("edit-mode-active");
+        const backButton = document.createElement("button");
+        backButton.id = "b_backFloat";
+        backButton.innerHTML = "Back";
+
+        backButton.addEventListener("pointerup", () => {
+            toggleDownloadMode();
+        });
+
+        pillContainer.appendChild(backButton);
 
         // 2. Loop through every rendered item and check its offline status
         for (let item of allVolumeElements) {
@@ -109,7 +124,32 @@ async function toggleDownloadMode() {
         }
     } else {
         // 1. Restore the pill UI
-        pillContainer.classList.remove("edit-mode-active");
+        const backButton = document.createElement("button");
+        backButton.id = "b_backFloat";
+        backButton.innerHTML = "Back";
+        backButton.addEventListener("pointerup", () => {
+            viewSwitcher("mainMenu");
+        });
+
+        const downloadButton = document.createElement("button");
+        downloadButton.id = "b_volumeDownload";
+        downloadButton.classList.add("b_download");
+        downloadButton.innerHTML = "Download";
+        downloadButton.addEventListener("pointerup", () => {
+            toggleDownloadMode();
+        });
+
+        const searchButton = document.createElement("button");
+        searchButton.id = "volumeSearch";
+        searchButton.classList.add("b_search");
+        searchButton.innerHTML = "Search";
+        searchButton.addEventListener("pointerup", () => {
+            //searchVolumes();
+        });
+
+        pillContainer.appendChild(backButton);
+        pillContainer.appendChild(downloadButton);
+        pillContainer.appendChild(searchButton);
         
         // 2. Wipe the red/green classes so it looks normal again
         allVolumeElements.forEach(item => {
@@ -531,14 +571,8 @@ async function buildMainMenu(){
 async function buildVolumeMenu(novelName){
     const volumeMenuBar = document.getElementById("volumeInfoBar");
     const volumeMenuBooks = document.getElementById("volumeMenuBooks");
-    const backButton = document.getElementById("b_backFloat");
 
     getSaveData(novelName);
-
-    //SHOULD BE IN THE INIT NOT HERE SINCE THATS A LOT OF EVENT LISTENERS
-    backButton.addEventListener("pointerup", () => {
-        viewSwitcher("mainMenu");
-    });
 
     volumeMenuBar.innerHTML = "";
     volumeMenuBooks.innerHTML = "";
@@ -575,7 +609,8 @@ async function buildVolumeMenu(novelName){
         const coverDiv = document.createElement("div");
         coverDiv.id = volumeCamelCase;
         coverDiv.classList.add("bookCover");
-        coverDiv.setAttribute("data-file-url", 'Novel\ Library/' + volume.fileName);
+        coverDiv.classList.add("volumeBookCover");
+        coverDiv.setAttribute("data-file-url", 'Novel-Library/' + volume.fileName);
         console.log("attribute: " + coverDiv.getAttribute("data-file-url"));
 
         const titleDiv = document.createElement("p");
@@ -603,13 +638,13 @@ async function buildVolumeMenu(novelName){
 
                 if (isCurrentlySaved) {
                     // Tell Service Worker to delete
-                    //dispatchDeleteCommand(coverDiv.getAttribute("data-file-url"));
+                    deleteVolumeDownload(coverDiv.getAttribute("data-file-url"));
                     
                     // Instantly update UI to red so it feels responsive
                     coverDiv.classList.replace("status-downloaded", "status-missing");
                 } else {
                     // Tell Service Worker to download
-                    //dispatchDownloadCommand(coverDiv.getAttribute("data-file-url"));
+                    downloadVolume(coverDiv.getAttribute("data-file-url"));
                     
                     // Instantly update UI to green
                     coverDiv.classList.replace("status-missing", "status-downloaded");
@@ -766,6 +801,31 @@ function viewSwitcher(targetViewId) {
 // ========================================================================== //
 const STORAGE_KEY = "novelReader_offlineSaveData"
 
+function deleteVolumeDownload(volumeURL){
+        if (navigator.serviceWorker.controller){
+
+        navigator.serviceWorker.controller.postMessage({
+            action: "MANUAL_DELETE",
+            targetUrl: volumeURL
+        });
+    } else {
+        console.warn("The Service Worker is not controlling this page yet.");
+    }
+}
+
+
+function downloadVolume(volumeURL){
+    if (navigator.serviceWorker.controller){
+
+        navigator.serviceWorker.controller.postMessage({
+            action: "MANUAL_SAVE",
+            targetUrl: volumeURL
+        });
+    } else {
+        console.warn("The Service Worker is not controlling this page yet.");
+    }
+}
+
 function saveToLocalStorage(dataObject){
     const dataString = JSON.stringify(dataObject);
     localStorage.setItem(STORAGE_KEY, dataString);
@@ -825,7 +885,7 @@ function updateSavedPos(){
 }
 
 async function isVolumeDownloaded(desiredURL){
-    const cache = await caches.open("volume-downloads-v1");
+    const cache = await caches.open("volume-downloads-v4");
     const response = await cache.match(desiredURL);
 
     return !!response; 

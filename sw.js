@@ -1,5 +1,5 @@
-const CORE_UI_CACHE = "novel-reader-v3";
-const DATA_CACHE = "volume-downloads-v3";
+const CORE_UI_CACHE = "novel-reader-v4";
+const DATA_CACHE = "volume-downloads-v4";
 
 const essentialFiles = [
     "index.html",
@@ -32,6 +32,7 @@ self.addEventListener("activate", (e) => {
             );
         })
     );
+    e.waitUntil(self.clients.claim());
 });
 
 self.addEventListener("fetch", (event) => {
