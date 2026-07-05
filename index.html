@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- These meta tags make it behave like a native iOS app -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Novel Reader</title>
+    <link rel="manifest" href="manifest.json" />   
+    <link rel="stylesheet" href="style.css">
+</head>
+<body ontouchstart="">
+    <div id="mainMenu" class="menu active">
+        <div id="menuInfoBar" class="menuInfoBar">
+            <h1 class="appTitle">Novel Reader</h1>
+            <p class="currentSeriesText">Current Series: Shadow Slave xxxxxxxxxxxxxxxxxxxxxxxx</p>
+
+            <!-- Top bar says current series name and details like current novel I am on and last chapter visited.
+                Maybe a header for the series and then a smaller header for the info so that it looks nicer and isnt cluttered. -->
+        </div>
+        <div id="mainMenuBooks" class="menuBooks">
+            <!-- Book 1 -->
+            <div class="bookAndTitle">
+                <div id="shadowSlave" class="bookCover"></div>
+                <p class="bookTitle">Shadow Slave</p>
+            </div>
+            <!-- Book 2 -->
+            <div class="bookAndTitle">
+                <div id="lordOfTheMysteries" class="bookCover"></div>
+                <p class="bookTitle">Lord of the Mysteries (Very Long Title Example To Test Two Lines)</p>
+            </div>
+            <!-- Book 3 -->
+            <div class="bookAndTitle">
+                <div id="omniscientReadersViewpoint" class="bookCover"></div>
+                <p class="bookTitle">Omniscient Reader's Viewpoint</p>
+            </div>
+            <!-- Book 4 -->
+            <div class="bookAndTitle">
+                <div id="theBeginningAfterTheEnd" class="bookCover"></div>
+                <p class="bookTitle">The Beginning After The End And It Just Keeps Going Forever And Ever</p>
+            </div>
+        </div>
+        <div class="floatingBottomContainer">
+            <input type="text" id="mainSearchBar" class="searchBar hidden" placeholder="Search series...">
+            <div class="floatingButtons">
+                <button id="menuSearch" class="b_search">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- both menus are identical in form so I made most of them rely on classes for their info, also each class for a menu has menu in the name -->
+
+    <div id="volumeMenu" class="menu hidden">
+        <div id="volumeInfoBar" class="menuInfoBar">
+            <h1 class="appTitle">Lord of the Mysteries</h1>
+            <p class="currentSeriesText">Volume: Shadow Lords Dreadul Travelogue, Chapter 3058</p>
+        </div>
+        <div id="volumeMenuBooks" class="menuBooks">
+            <!-- Book 1 -->
+            <div class="bookAndTitle">
+                <div id="shadowSlave" class="bookCover"></div>
+                <p class="bookTitle">Shadow Slave</p>
+            </div>
+            <!-- Book 2 -->
+            <div class="bookAndTitle">
+                <div id="lordOfTheMysteries" class="bookCover"></div>
+                <p class="bookTitle">Lord of the Mysteries (Very Long Title Example To Test Two Lines)</p>
+            </div>
+            <!-- Book 3 -->
+            <div class="bookAndTitle">
+                <div id="omniscientReadersViewpoint" class="bookCover"></div>
+                <p class="bookTitle">Omniscient Reader's Viewpoint</p>
+            </div>
+            <!-- Book 4 -->
+            <div class="bookAndTitle">
+                <div id="theBeginningAfterTheEnd" class="bookCover"></div>
+                <p class="bookTitle">The Beginning After The End And It Just Keeps Going Forever And Ever</p>
+            </div>
+        </div>
+        <div id="volumeBottomContainer" class="floatingBottomContainer">
+            <input type="text" id="VolumeSearchBar" class="searchBar hidden" placeholder="Search series...">
+            <div class="floatingButtons">
+                <button id="b_backFloat">Back</button>
+                <button id="b_download" class="b_download">Download</button>
+                <button id="volumeSearch" class="b_search">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="reader" class="hidden">
+        <button id="b_mainTLM" class="active"> 
+        <!-- Is it maybe better for this to be a div? i just dont know how to do that. -->
+        </button>
+        <div id="chapterContent"> 
+            <p>"Lord of Mysteries Volume 1: Clown Chapter 199: Successful Toss of the Die The beating heart, the yellowish-green liquid, the silently burning black flames, and the falling figure entered Klein’s field of vision and etched themselves deeply into Klein’s mind. The most dangerous mission he had encountered up to this date had been when he was dealing with Ray Bieber who was in the midst of digesting. Even such a terrifying and dangerous monster had only resulted in severe injuries to the Beyonders on the mission. No one had to sacrifice their lives. The deaths of the Beyonders Klein had witnessed, including Old Neil’s, were all due to them losing control. The “murderer” might be strange and indescribable or related to evil gods, but they had nothing to do with the missions they undertook. Now, he was looking at one of his partners being killed in action. The death was purely due to one mistake. Nighthawks were fighting against madness, but so were they also fighting against danger. There might never be an opportunity to make up for that one mistake. Klein’s thoughts erupted with a boom. Apparently having taken a huge blow, he knelt down and lifted his right hand, firing successive shots at Madam Sharon. The silver demon hunting bullets pierced through the invisible threads and shot towards her head and transparent sleeping gown. Suddenly, Madam Sharon appeared to be yanked in another direction by something, allowing her to successfully</p>
+            <!-- There should be optional header text about different chapter and series info, but idk if thats a js insertion thing or what. --> 
+            </div>
+        <div id="overlayContainer" class="hidden"> 
+            <!-- I added this cuz I was told to in order to stop scrolling of text while menu is open, but I would rather actually have it where when non menu (the reader screen) is pressed the menu goes away and no data (if color is open for example) is changed since the last change (the choice changes should be in real time and not something that updates when the menu closes) -->
+            <div id="mainTLM" class="tlmShared hidden">
+                <!-- idk how but this needs to kind of animate but mainly just pop diagonally out of the moving button and become visible when it is pressed relative to where the button was placed. it cannot also break if you for example place it in the top right corner and it tries to pop up diagonally right. -->
+                <div id="infoTLM"> 
+                    <!-- contains the text for the info of the series, current novel chapter chapter percent etc. incjected by js --> 
+                    <h1 id="tlmHeader"><B>Lord of the Mysteries</B></h1>
+                    <h2 id="tlmH2Volume" class="secondaryStat"><b>Volume:</b> Shadow Lords Dreadful Travelogue</h2>
+                    <h2 id="tlmH2Chapter" class="secondaryStat"><b>Chapter:</b> 1308</h2>
+                </div>
+                <div id="smallButtonContainer"> 
+                    <button id="b_returnMainMenu" class="b_small"> --<br>--<br>-- </button>
+                    <button id="b_settings" class="b_small">(...)</button>  <!--<br>*<br><br>***<br><br> *-->
+                </div>
+                <div id="navButtonContainer">
+                    <button id="b_previousChap" class="b_nav"> <- </button>
+                    <button id="b_selectChap" class="b_nav"> —<br>—<br>— </button>
+                    <button id="b_nextChap" class="b_nav"> -> </button>
+                </div>
+            </div>
+            <div id="chapterSelect" class="tlmShared colorList hidden">
+                <div class="colorTopButtonsContainer">
+                    <button id="b_chapterBack" class="b_back">Back</button>
+                </div>
+                <div id="chapterChoiceContainer" class="colorChoicesContainer">
+                    <div class="colorChoice">
+                        <!-- This is an example color div, these will be populated by js, but ill have a few in by default anyways. they are selectable but idk how to make it so you can select a div -->
+                        <div class="colorText">Red But Like Super Long</div>
+                        <div class="colorExample"></div>
+                    </div> 
+                </div>
+            </div>
+            <div id="settings" class="tlmShared hidden"> 
+                <div id="fontSizeContainer">
+                    <input id="fontSlider" type="range">
+                    <input id="fontInput" type="number" placeholder="24">
+                </div>
+                <button id="b_colorBG" class="b_settingsInner"> Background Color </button>
+                <button id="b_colorFont" class="b_settingsInner"> Font Color </button>
+                <button id="b_font" class="b_settingsInner"> Font </button>
+                <button id="b_stats" class="b_settingsInner"> Chapter Info <!-- this one can maybe also open a menu where you choose which stats will be displayed, but I can add that later --></button>
+                <button id="b_resetDefaults" class="b_settingsInner"> Reset Defaults</button>
+            </div>
+            <div id="colorListText" class="tlmShared colorList hidden">
+                <div class="colorTopButtonsContainer">
+                    <button id="b_colorBack" class="b_back">Back</button>
+                    <button class="b_addColor"> + </button>
+                </div>
+                <div id="colorChoicesContainer">
+                    <div id="exampleColor" class="colorChoice">
+                        <!-- This is an example color div, these will be populated by js, but ill have a few in by default anyways. they are selectable but idk how to make it so you can select a div -->
+                        <div class="colorText">Red But Like Super Long</div>
+                        <div class="colorExample"></div>
+                    </div> 
+                </div>
+            </div>
+            <div id="colorListBG" class="tlmShared colorList hidden">
+                <div class="colorTopButtonsContainer">
+                    <button id="b_colorBack" class="b_back">Back</button>
+                    <button class="b_addColor"> + </button>
+                </div>
+                <div id="colorChoicesContainer">
+                    <div id="exampleColor" class="colorChoice">
+                        <!-- This is an example color div, these will be populated by js, but ill have a few in by default anyways. they are selectable but idk how to make it so you can select a div -->
+                        <div class="colorText">Red But Like Super Long</div>
+                        <div class="colorExample"></div>
+                    </div> 
+                </div>
+            </div>
+            <div id="colorSelector" class="hidden">
+                <!-- Ill just save this for later, like at the end lol -->
+            </div>
+        </div>
+ 
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

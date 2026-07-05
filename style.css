@@ -1,0 +1,665 @@
+/* --- GLOBAL VARIABLES & RESET --- */
+:root {
+    --bg-color: #2b2d31; /* Discord Dark Mode Gray */
+    --text-color: #e3e3e3; /* Soft White */
+    --border-color: #1e1f22; /* Darker gray for the divider line */
+    --reader-default-bg: black;
+    --reader-default-text-color: white;
+    --default-reader-font-size: 40px;
+
+    --tlm-left: 0;
+    --tlm-right: 0;
+    --tlm-top: 0;
+    --tlm-bottom: 0;
+    --tlm-transform-origin: "none";
+
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    background-color: var(--bg-color);
+    height: 100dvh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: fixed; /* THIS KILLS THE BOTTOM GAP ON iOS */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: var(--text-color);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+
+
+/*
+-----------------------------
+State Control
+-----------------------------
+*/
+
+.hidden {
+    display: none !important;
+}
+
+.active {
+    display: flex;
+}
+
+/*
+-----------------------------
+Classes 
+-----------------------------
+*/
+
+/* Menu */
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding-top: env(safe-area-inset-top);
+}
+    .menuInfoBar {
+        text-align: center;
+        padding: 20px 15px 15px 15px; 
+        border-bottom: 2px solid var(--border-color); /* The divider line */
+        flex-shrink: 0; /* Prevents the bar from squishing when you scroll the grid */
+    }
+        .appTitle {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .currentSeriesText {
+            font-size: 15px;
+            color: #b5bac1; /* Slightly dimmer gray so it doesn't fight the title */
+            
+            /* Forces this specific text to one line with a ... if it's too long */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; 
+        }
+    .menuBooks {
+        display: grid;
+        /* Automatically creates exactly 3 columns */
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        padding: 20px;
+        
+        /* This makes ONLY the books scrollable, leaving the top bar in place */
+        overflow-y: auto; 
+        padding-bottom: 120px; /* Leaves extra blank space at the bottom so the last books don't hide under the floating buttons */
+    }
+        .bookAndTitle {
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* Space between cover and title */
+        }
+            .bookCover {
+                position: relative;
+                width: 100%;
+                aspect-ratio: 2 / 3; /* Forces standard book proportions */
+                background-color: #111; /* The black placeholder rectangle */
+                border-radius: 6px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+                background-position: center;
+                background-size: contain;
+            }
+            .bookTitle {
+                font-size: 16px;
+                line-height: 1.3;
+                text-align: center;
+                color: #dbdee1;
+                
+                /* MAGIC TRICK: 2-Line Truncation */
+                display: -webkit-box;
+                -webkit-line-clamp: 2; /* Sets the max lines to 2 */
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+    .floatingBottomContainer {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%); /* Magic trick to perfectly center a fixed element */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px; /* Space between search bar and buttons */
+        z-index: 50; /* Forces it to hover over the books */
+        width: 85%;
+        max-width: 350px;
+    }
+        .searchBar {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 20px;
+            border: none;
+            background-color: #1e1f22;
+            color: var(--text-color);
+            font-size: 15px;
+            outline: none; /* Removes ugly blue outline when typing */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .floatingButtons {
+            display: flex;
+            gap: 10px;
+            background-color: rgba(30, 31, 34, 0.85); /* Semi-transparent background */
+            backdrop-filter: blur(10px); /* iOS Glassmorphism: Blurs the books behind it */
+            padding: 8px 15px;
+            border-radius: 30px; /* Pill shape */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+            .floatingButtons button {
+                background: none;
+                border: none;
+                color: var(--text-color);
+                font-size: 16px;
+                font-weight: 600;
+                padding: 10px 20px;
+                border-radius: 20px;
+            }
+            .floatingButtons button:active {
+                background-color: rgba(255, 255, 255, 0.1); /* Flashes slightly lighter when tapped */
+            }
+
+
+/* 1. The Tint Overlays */
+/* Apply this to the generic container holding your image/cover */
+.generic-cover-container {
+    position: relative; /* Required for the overlay to sit inside it */
+}
+
+/* By default, the overlay is invisible */
+.bookCover::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none; /* So it doesn't block clicks */
+}
+
+/* When the item has the downloaded class */
+.status-downloaded .bookCover::after {
+    background-color: rgba(0, 255, 0, 0.4); /* Green tint */
+    opacity: 1;
+}
+
+/* When the item has the missing class */
+.status-missing .bookCover::after {
+    background-color: rgba(255, 0, 0, 0.4); /* Red tint */
+    opacity: 1;
+}
+
+/* 2. The Button Pill Transition */
+/* When the main menu/pill container gets the edit mode class, hide the other buttons */
+.edit-mode-active .hide-in-edit-mode {
+    display: none;
+}
+
+/* Nav Buttons */
+
+/* Settings Buttons */
+
+/* Color Selecting */
+
+
+/*
+-----------------------------
+Main Menu
+-----------------------------
+*/
+
+#lordOfTheMysteries{
+    background-image: url("Novel\ Covers/lotm_generic_cover.jpg");
+}
+
+#theBeginningAfterTheEnd{
+    background-image: url("Novel\ Covers/tbate_generic_cover.jpg");
+}
+
+#shadowSlave{
+    background-image: url("Novel\ Covers/shadowSlave_generic_cover.jpg");
+}
+
+#omniscientReadersViewpoint{
+    background-image: url("Novel\ Covers/orv_generic_cover.jpg");
+}
+
+
+/*
+-----------------------------
+Volume Menu
+-----------------------------
+*/
+
+
+/*
+-----------------------------
+Reader View
+-----------------------------
+*/
+
+#reader.active {
+    display: block; 
+}
+
+#reader {
+    background-color: var(--reader-default-bg);
+    color: var(--reader-default-text-color);
+    position: absolute; 
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1;
+    overflow: hidden; 
+}
+
+#b_mainTLM {
+    position: fixed;
+    left: 50px;
+    top: 100px;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%; 
+    opacity: 50%;
+    transition: opacity 0.2s ease;
+    margin: 10px;
+    
+    /* 
+       Fine-Tuned AssistiveTouch Lens Geometry:
+       1. White Core: Tightly reined in (0% to 34%)
+       2. Inner Ring 1: Wider, taking up the extra space (34.5% to 44%)
+       3. Inner Ring 2: Wider, taking up the extra space (44.5% to 55%)
+       4. Outer Ring: Thinned out dark shadow rim (55.5% to 72%)
+    */
+    background: radial-gradient(circle, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(255, 255, 255, 0.95) 34%, 
+        rgba(255, 255, 255, 0.35) 34.5%, 
+        rgba(255, 255, 255, 0.35) 44%, 
+        rgba(255, 255, 255, 0.12) 44.5%, 
+        rgba(255, 255, 255, 0.12) 55%, 
+        rgba(10, 10, 10, 0.75) 55.5%, 
+        rgba(10, 10, 10, 0.75) 72%, 
+        transparent 72.5%
+    ), rgba(25, 25, 25, 0.45); /* Deep frosted glass backing */
+    
+    /* Native Blur Configuration */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 50;
+    
+    /* Reinstalled the expanding spring animation curve */
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                background 0.2s ease, 
+                box-shadow 0.2s ease;
+}
+
+#b_mainTLM:active {
+    /* Expands cleanly on touch down instead of shrinking */
+    transform: scale(1.12); 
+    
+    /* Concentric bands stretch outward and saturate slightly during expansion */
+    background: radial-gradient(circle, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.98) 36%, 
+        rgba(255, 255, 255, 0.40) 36.5%, 
+        rgba(255, 255, 255, 0.40) 47%, 
+        rgba(255, 255, 255, 0.15) 47.5%, 
+        rgba(255, 255, 255, 0.15) 58%, 
+        rgba(5, 5, 5, 0.85) 58.5%, 
+        rgba(5, 5, 5, 0.85) 74%, 
+        transparent 74.5%
+    ), rgba(15, 15, 15, 0.6);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
+}
+
+#chapterContent {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto; 
+    overflow-x: hidden; 
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#chapterContent p {
+    color: var(--reader-default-text-color);
+    font-size: var(--default-reader-font-size); 
+    line-height: 1.35; 
+    white-space: pre-wrap;
+    word-wrap: break-word; 
+    margin-bottom: 20px;
+}
+
+/*
+-----------------------------
+Shared TLM Styles (Premium AssistiveTouch Base)
+-----------------------------
+*/
+
+#overlayContainer{
+    position: absolute;
+    left: 0; right: 0; bottom: 0; top: 0;
+    background: transparent;
+    z-index: 60; 
+}
+
+.tlmShared {
+    position: absolute;
+    left: var(--tlm-left); 
+    right: var(--tlm-right); 
+    margin: 0 auto; 
+    bottom: var(--tlm-bottom);
+    top: var(--tlm-top);
+    
+    display: flex;
+    flex-direction: column;
+    
+    background-color: rgba(35, 35, 35, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    /* SCALING FIX: calc(100vw - 20px) means it always leaves 10px on each side.
+       Because max-width is removed, it will grow on bigger phones/PCs. */
+    width: calc(100vw - 20px); 
+    
+    /* This forces the menu to perfectly maintain your 370x350 shape at ANY screen size */
+    aspect-ratio: 37 / 35;
+    
+    color: var(--text-color);
+    border-radius: 25px; 
+    z-index: 70; 
+    
+    transform-origin: var(--tlm-transform-origin); 
+    transform: scale(0);
+    transition: transform 0.3s ease;
+    overflow: hidden; 
+}
+
+.tlmOpen {
+    transform: scale(1);
+}
+
+/*
+-----------------------------
+Main TLM
+-----------------------------
+*/
+
+#mainTLM {
+    align-items: center;
+    padding: 20px 15px; 
+    justify-content: space-evenly; 
+}
+
+#infoTLM{
+    color: var(--text-color);
+    text-align: center;
+    width: 100%;
+}
+
+.secondaryStat{
+    color:#b5bac1; 
+    font-size: 20px; 
+    font-weight: 650;
+    margin-top: 2px;
+}
+
+#smallButtonContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly; 
+    width: 100%;
+}
+
+.b_small{
+    width: 55px;  
+    height: 55px;
+    background-color: rgba(255, 255, 255, 0.12); 
+    border-radius: 50%;
+    border: none;
+    color: var(--text-color);
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    font-weight: bold;
+    line-height: 25%;
+}
+
+#navButtonContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.b_nav{
+    width: 85px; 
+    height: 85px;
+    background-color: rgba(255, 255, 255, 0.12); 
+    border-radius: 50%;
+    border: none;
+    color: var(--text-color);
+    
+    background-image: url(Button\ Images/hamburger_icon.jpg); 
+    background-size: 40%; 
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    text-align: center;
+    font-weight: bold;
+    line-height: 25%;
+}
+
+.b_small:active, .b_nav:active {
+    background-color: rgba(255, 255, 255, 0.25); 
+}
+
+/*
+-----------------------------
+Settings TLM
+-----------------------------
+*/
+
+#settings{
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 15px 0;
+}
+
+#fontSizeContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 90%;
+}
+
+#fontSlider{
+    -webkit-appearance: none; 
+    appearance: none;
+    background: transparent;  
+    cursor:pointer;
+    width: 100%;
+}
+
+#fontSlider::-webkit-slider-runnable-track {
+  background: rgb(158, 158, 158);
+  height: 12px;
+  border-radius: 4px;
+  margin-right: 3px;
+}
+
+#fontSlider::-webkit-slider-thumb {
+  -webkit-appearance: none; 
+  appearance: none;
+  background: rgb(255, 207, 207);
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;       
+  margin-top: -11.5px;         
+}
+
+#fontInput{
+    text-align: center;
+    border: none;
+    font-weight: 700;
+    font-size: 33px;
+    background-color: transparent;
+    color: rgb(191, 183, 183);
+    margin-left: 10px;
+    width: 50px;
+    height: 40px;
+}
+
+.b_settingsInner{
+    border: none;
+    border-radius: 12px; 
+    width: 90%;
+    background-color: rgba(255, 255, 255, 0.12); 
+    color: white;
+    padding: 12px; 
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.b_settingsInner:active {
+    background-color: rgba(255, 255, 255, 0.25); 
+}
+
+/*
+-----------------------------
+Color Lists TLM
+-----------------------------
+*/
+
+.colorList{
+    padding: 0; 
+    /* The buggy position: relative; has been permanently deleted from here */
+}
+
+.colorTopButtonsContainer{
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 65px;
+    z-index: 5; 
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start; 
+    padding: 15px 20px 0 20px;
+    
+    background: linear-gradient(to bottom, rgba(35, 35, 35, 1) 40%, rgba(35, 35, 35, 0) 100%);
+    pointer-events: none; 
+}
+
+.b_back, .b_addColor {
+    pointer-events: auto; 
+    font-size: 22px; 
+    font-weight: 700;
+    background: none;
+    border: none;
+    color: #b5bac1;
+}
+
+.b_addColor {
+    font-size: 26px;
+    padding: 0 5px; 
+}
+
+.colorChoicesContainer{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto; 
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 60px 15px 20px 15px; 
+}
+
+.colorChoice {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1e1f22; 
+    padding: 15px 20px;
+    border-radius: 15px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.colorChoice:active {
+    background-color: #383a40;
+}
+
+.colorExample {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.selectedColor {
+    background-color: #404249; 
+    border: 2px solid #b5bac1; 
+}
+
+.selectedColor::before {
+    content: "• ";
+    color: white;
+}
+/* I got tired of polishing the colour thing. the back button should be in the top left corner of the menu. 
+The colors in the list should have a fetched colour name and if no name found itll be a generic name, and then to the right of the colour is a small circle with the colour inside of it representing the colour your text/bg will become.
+the add new colour buttons gonna always be the last element in this list.*/
+
+/*
+
+Im tired, dont forget to do this stuff tmrw:
+    - DONE: have gemini actually put the info thats shared between them all in it, too lazy to do it myself. obv remove that info from all of them. I gotta make a class for all of the different tlms to share so that there isnt so many of the exact same thing
+    - DONE: just gotta style and make it work now. add a div for the back button to be in for the color selectors, keep it seperate from the scrolling bit
+    - DONE: now gotta style it and make it work too.make a div for the scrolling stuff like all the coloursin the selector.
+    - fix some of the margin stuff to be done with flex instead
+    - fix buttons breaking and not displaying images or text
+    - make it look more visually nice once the outline has been made. MAKE SURE to place a heavy emphasis on hot changing sizings for anything except superficial things like softening borders a bit or whatnot.
+    - add proper z index to the menus, probably just in the tlmMenu class that they will all share. the z index needs to be higher than that of the invisible layer.
+    - add one of those ::before things to a new class called like selectedColor. this can be used by js to attach to the currently selected colour so that it can be visually seen which is selected.
+    -setup the transforming class and states for the menu, only need to do this for the first one that opens. transition: transform 0.2s; and the second class holds the transform=scal(1) which it gets added with js. MAKE SURE TO SWITCH THE CLASS TO HIDDEN BEFORE REMOVING THE SECEOND TRANSFORM CLASS OR THE ANIMATION WILL PLAY DURING THE SWITCH TO ANOTHER MENU WHICH ISNT WHAT WE WANT. there can be a closing animation when its a normal close though, but that will take a lot of fancy js class applying, at the very least make the class tomorrow.
+    - do the apple safe area thing maybe if theres time or if I care enoguh. but it doesnt really matter.
+
+*/
+
+/*
+---------------------------------
+Color Selector (Not Right Now ok)
+---------------------------------
+*/

@@ -1,0 +1,138 @@
+[
+  {
+    "seriesName": "Shadow Slave",
+    "volumes": [
+      {
+        "volumeNumber": 1,
+        "volumeTitle": "Volume 1 - Child of Shadows",
+        "fileName": "shadow_slave_vol_1_volume_1___child_of_shadows.json",
+        "totalChapters": 95
+      },
+      {
+        "volumeNumber": 2,
+        "volumeTitle": "Volume 2 - Demon of Change",
+        "fileName": "shadow_slave_vol_2_volume_2___demon_of_change.json",
+        "totalChapters": 255
+      },
+      {
+        "volumeNumber": 3,
+        "volumeTitle": "Volume 3 - Prince of Nothing",
+        "fileName": "shadow_slave_vol_3_volume_3___prince_of_nothing.json",
+        "totalChapters": 250
+      },
+      {
+        "volumeNumber": 4,
+        "volumeTitle": "Volume 4 - Chain Breaker",
+        "fileName": "shadow_slave_vol_4_volume_4___chain_breaker.json",
+        "totalChapters": 150
+      },
+      {
+        "volumeNumber": 5,
+        "volumeTitle": "Volume 5 - Dread Night",
+        "fileName": "shadow_slave_vol_5_volume_5___dread_night.json",
+        "totalChapters": 310
+      },
+      {
+        "volumeNumber": 6,
+        "volumeTitle": "Volume 6 - All the Devils Are Here",
+        "fileName": "shadow_slave_vol_6_volume_6___all_the_devils_are_here.json",
+        "totalChapters": 170
+      },
+      {
+        "volumeNumber": 7,
+        "volumeTitle": "Volume 7 - The Tomb of Ariel",
+        "fileName": "shadow_slave_vol_7_volume_7___the_tomb_of_ariel.json",
+        "totalChapters": 360
+      },
+      {
+        "volumeNumber": 8,
+        "volumeTitle": "Volume 8 - The Lord of Shadows",
+        "fileName": "shadow_slave_vol_8_volume_8___the_lord_of_shadows.json",
+        "totalChapters": 248
+      },
+      {
+        "volumeNumber": 9,
+        "volumeTitle": "Volume 9 - Throne of War",
+        "fileName": "shadow_slave_vol_9_volume_9___throne_of_war.json",
+        "totalChapters": 388
+      },
+      {
+        "volumeNumber": 10,
+        "volumeTitle": "Volume 10 - Dark Lords Dreadful Travelogue",
+        "fileName": "shadow_slave_vol_10_volume_10___dark_lords_dreadful_travelogue.json",
+        "totalChapters": 393
+      },
+      {
+        "volumeNumber": 11,
+        "volumeTitle": "Volume 11 - The Song of Ariadne",
+        "fileName": "shadow_slave_vol_11_volume_11___the_song_of_ariadne.json",
+        "totalChapters": 258
+      },
+      {
+        "volumeNumber": 12,
+        "volumeTitle": "Volume 12 - (Unfinished)",
+        "fileName": "shadow_slave_vol_12_volume_12____unfinished_.json",
+        "totalChapters": 62
+      }
+    ]
+  },
+  {
+    "seriesName": "Lord of The Mysteries",
+    "volumes": [
+      {
+        "volumeNumber": 1,
+        "volumeTitle": "Clown - LotM Vol. 1",
+        "fileName": "lord_of_the_mysteries_vol_1_clown___lotm_vol__1.json",
+        "totalChapters": 213
+      },
+      {
+        "volumeNumber": 2,
+        "volumeTitle": "Faceless - LotM Vol. 2",
+        "fileName": "lord_of_the_mysteries_vol_2_faceless___lotm_vol__2.json",
+        "totalChapters": 269
+      },
+      {
+        "volumeNumber": 3,
+        "volumeTitle": "Traveler - LotM Vol. 3",
+        "fileName": "lord_of_the_mysteries_vol_3_traveler___lotm_vol__3.json",
+        "totalChapters": 250
+      },
+      {
+        "volumeNumber": 4,
+        "volumeTitle": "Undying - LotM Vol. 4",
+        "fileName": "lord_of_the_mysteries_vol_4_undying___lotm_vol__4.json",
+        "totalChapters": 213
+      },
+      {
+        "volumeNumber": 5,
+        "volumeTitle": "Red Priest - LotM Vol. 5",
+        "fileName": "lord_of_the_mysteries_vol_5_red_priest___lotm_vol__5.json",
+        "totalChapters": 204
+      },
+      {
+        "volumeNumber": 6,
+        "volumeTitle": "Lightseeker - LotM Vol. 6",
+        "fileName": "lord_of_the_mysteries_vol_6_lightseeker___lotm_vol__6.json",
+        "totalChapters": 116
+      },
+      {
+        "volumeNumber": 7,
+        "volumeTitle": "The Hanged Man - LotM Vol. 7",
+        "fileName": "lord_of_the_mysteries_vol_7_the_hanged_man___lotm_vol__7.json",
+        "totalChapters": 87
+      },
+      {
+        "volumeNumber": 8,
+        "volumeTitle": "Fool - LotM Vol. 8",
+        "fileName": "lord_of_the_mysteries_vol_8_fool___lotm_vol__8.json",
+        "totalChapters": 42
+      },
+      {
+        "volumeNumber": 9,
+        "volumeTitle": "Side Stories - LotM Vol. 9",
+        "fileName": "lord_of_the_mysteries_vol_9_side_stories___lotm_vol__9.json",
+        "totalChapters": 40
+      }
+    ]
+  }
+]
