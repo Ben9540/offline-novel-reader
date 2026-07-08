@@ -6,7 +6,6 @@ const essentialFiles = [
     "app.js",
     "style.css",
     "manifest.json",
-    "Images/",
     "Novel-Library/index.json"
 ];
 
