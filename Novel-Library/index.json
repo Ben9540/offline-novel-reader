@@ -110,8 +110,8 @@
     ]
   },
   {
-    "seriesName": "Lord of The Mysteries",
-    "coverImagePath": "Images/Novel-Covers/Lord-of-The-Mysteries.jpg",
+    "seriesName": "Lord of the Mysteries",
+    "coverImagePath": "Images/Novel-Covers/Lord-of-the-Mysteries.jpg",
     "volumes": [
       {
         "volumeNumber": 0,
@@ -125,63 +125,63 @@
         "volumeTitle": "Clown - LotM Vol. 1",
         "fileName": "lord_of_the_mysteries_vol_1_clown___lotm_vol__1.json",
         "totalChapters": 213,
-        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-1.jpg"
+        "coverImagePath": "Images/Volume-Covers/Lord-of-the-Mysteries/lord-of-the-mysteries-1.jpg"
       },
       {
         "volumeNumber": 2,
         "volumeTitle": "Faceless - LotM Vol. 2",
         "fileName": "lord_of_the_mysteries_vol_2_faceless___lotm_vol__2.json",
         "totalChapters": 269,
-        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-2.jpeg"
+        "coverImagePath": "Images/Volume-Covers/Lord-of-the-Mysteries/lord-of-the-mysteries-2.jpeg"
       },
       {
         "volumeNumber": 3,
         "volumeTitle": "Traveler - LotM Vol. 3",
         "fileName": "lord_of_the_mysteries_vol_3_traveler___lotm_vol__3.json",
         "totalChapters": 250,
-        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-3.jpeg"
+        "coverImagePath": "Images/Volume-Covers/Lord-of-the-Mysteries/lord-of-the-mysteries-3.jpeg"
       },
       {
         "volumeNumber": 4,
         "volumeTitle": "Undying - LotM Vol. 4",
         "fileName": "lord_of_the_mysteries_vol_4_undying___lotm_vol__4.json",
         "totalChapters": 213,
-        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-4.jpg"
+        "coverImagePath": "Images/Volume-Covers/Lord-of-the-Mysteries/lord-of-the-mysteries-4.jpg"
       },
       {
         "volumeNumber": 5,
         "volumeTitle": "Red Priest - LotM Vol. 5",
         "fileName": "lord_of_the_mysteries_vol_5_red_priest___lotm_vol__5.json",
         "totalChapters": 204,
-        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-5.jpg"
+        "coverImagePath": "Images/Volume-Covers/Lord-of-the-Mysteries/lord-of-the-mysteries-5.jpg"
       },
       {
         "volumeNumber": 6,
         "volumeTitle": "Lightseeker - LotM Vol. 6",
         "fileName": "lord_of_the_mysteries_vol_6_lightseeker___lotm_vol__6.json",
         "totalChapters": 116,
-        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-6.jpg"
+        "coverImagePath": "Images/Volume-Covers/Lord-of-the-Mysteries/lord-of-the-mysteries-6.jpg"
       },
       {
         "volumeNumber": 7,
         "volumeTitle": "The Hanged Man - LotM Vol. 7",
         "fileName": "lord_of_the_mysteries_vol_7_the_hanged_man___lotm_vol__7.json",
         "totalChapters": 87,
-        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-7.jpeg"
+        "coverImagePath": "Images/Volume-Covers/Lord-of-the-Mysteries/lord-of-the-mysteries-7.jpeg"
       },
       {
         "volumeNumber": 8,
         "volumeTitle": "Fool - LotM Vol. 8",
         "fileName": "lord_of_the_mysteries_vol_8_fool___lotm_vol__8.json",
         "totalChapters": 42,
-        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-8.jpeg"
+        "coverImagePath": "Images/Volume-Covers/Lord-of-the-Mysteries/lord-of-the-mysteries-8.jpeg"
       },
       {
         "volumeNumber": 9,
         "volumeTitle": "Side Stories - LotM Vol. 9",
         "fileName": "lord_of_the_mysteries_vol_9_side_stories___lotm_vol__9.json",
         "totalChapters": 40,
-        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-9.webp"
+        "coverImagePath": "Images/Volume-Covers/Lord-of-the-Mysteries/lord-of-the-mysteries-9.webp"
       }
     ]
   },
