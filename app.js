@@ -137,7 +137,7 @@ function updateSavedPos(){
 }
 
 async function isVolumeDownloaded(desiredURL){
-    const cache = await caches.open("volume-downloads-v5");
+    const cache = await caches.open("volume-downloads-v6");
     const response = await cache.match(desiredURL);
     return !!response; 
 } 
