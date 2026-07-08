@@ -1,137 +1,277 @@
 [
   {
     "seriesName": "Shadow Slave",
+    "coverImagePath": "Images/Novel-Covers/Shadow-Slave.jpg",
     "volumes": [
       {
         "volumeNumber": 1,
         "volumeTitle": "Volume 1 - Child of Shadows",
         "fileName": "shadow_slave_vol_1_volume_1___child_of_shadows.json",
-        "totalChapters": 95
+        "totalChapters": 95,
+        "coverImagePath": "Images/Volume-Covers/Shadow-Slave/shadow-slave-1.jpeg"
       },
       {
         "volumeNumber": 2,
         "volumeTitle": "Volume 2 - Demon of Change",
         "fileName": "shadow_slave_vol_2_volume_2___demon_of_change.json",
-        "totalChapters": 255
+        "totalChapters": 255,
+        "coverImagePath": "Images/Volume-Covers/Shadow-Slave/shadow-slave-2.jpeg"
       },
       {
         "volumeNumber": 3,
         "volumeTitle": "Volume 3 - Prince of Nothing",
         "fileName": "shadow_slave_vol_3_volume_3___prince_of_nothing.json",
-        "totalChapters": 250
+        "totalChapters": 250,
+        "coverImagePath": "Images/Volume-Covers/Shadow-Slave/shadow-slave-3.jpeg"
       },
       {
         "volumeNumber": 4,
         "volumeTitle": "Volume 4 - Chain Breaker",
         "fileName": "shadow_slave_vol_4_volume_4___chain_breaker.json",
-        "totalChapters": 150
+        "totalChapters": 150,
+        "coverImagePath": "Images/Volume-Covers/Shadow-Slave/shadow-slave-4.webp"
       },
       {
         "volumeNumber": 5,
         "volumeTitle": "Volume 5 - Dread Night",
         "fileName": "shadow_slave_vol_5_volume_5___dread_night.json",
-        "totalChapters": 310
+        "totalChapters": 310,
+        "coverImagePath": "Images/Volume-Covers/Shadow-Slave/shadow-slave-5.jpeg"
       },
       {
         "volumeNumber": 6,
         "volumeTitle": "Volume 6 - All the Devils Are Here",
         "fileName": "shadow_slave_vol_6_volume_6___all_the_devils_are_here.json",
-        "totalChapters": 170
+        "totalChapters": 170,
+        "coverImagePath": "Images/Volume-Covers/Shadow-Slave/shadow-slave-6.jpeg"
       },
       {
         "volumeNumber": 7,
         "volumeTitle": "Volume 7 - The Tomb of Ariel",
         "fileName": "shadow_slave_vol_7_volume_7___the_tomb_of_ariel.json",
-        "totalChapters": 360
+        "totalChapters": 360,
+        "coverImagePath": "Images/Volume-Covers/Shadow-Slave/shadow-slave-7.jpeg"
       },
       {
         "volumeNumber": 8,
         "volumeTitle": "Volume 8 - The Lord of Shadows",
         "fileName": "shadow_slave_vol_8_volume_8___the_lord_of_shadows.json",
-        "totalChapters": 248
+        "totalChapters": 250,
+        "coverImagePath": "Images/Volume-Covers/Shadow-Slave/shadow-slave-8.jpeg"
       },
       {
         "volumeNumber": 9,
         "volumeTitle": "Volume 9 - Throne of War",
         "fileName": "shadow_slave_vol_9_volume_9___throne_of_war.json",
-        "totalChapters": 388
+        "totalChapters": 420,
+        "coverImagePath": "Images/Volume-Covers/Shadow-Slave/shadow-slave-9.jpeg"
       },
       {
         "volumeNumber": 10,
         "volumeTitle": "Volume 10 - Dark Lords Dreadful Travelogue",
         "fileName": "shadow_slave_vol_10_volume_10___dark_lords_dreadful_travelogue.json",
-        "totalChapters": 393
+        "totalChapters": 460,
+        "coverImagePath": "Images/Volume-Covers/Shadow-Slave/shadow-slave-10.webp"
       },
       {
         "volumeNumber": 11,
         "volumeTitle": "Volume 11 - The Song of Ariadne",
         "fileName": "shadow_slave_vol_11_volume_11___the_song_of_ariadne.json",
-        "totalChapters": 258
+        "totalChapters": 280,
+        "coverImagePath": "Images/Volume-Covers/Shadow-Slave/shadow-slave-11.webp"
       },
       {
         "volumeNumber": 12,
         "volumeTitle": "Volume 12 - (Unfinished)",
         "fileName": "shadow_slave_vol_12_volume_12____unfinished_.json",
-        "totalChapters": 62
+        "totalChapters": 82,
+        "coverImagePath": "Images/Volume-Covers/Shadow-Slave/shadow-slave-12.webp"
+      }
+    ]
+  },
+  {
+    "seriesName": "Omniscient Readers Viewpoint",
+    "coverImagePath": "Images/Novel-Covers/Omniscient-Readers-Viewpoint.jpg",
+    "volumes": [
+      {
+        "volumeNumber": 0,
+        "volumeTitle": "Omniscient Reader\u0027s Viewpoint - Sing-shong (singsyong)",
+        "fileName": "omniscient_readers_viewpoint_vol_0_omniscient_reader_s_viewpoint___sing_shong__singsyong_.json",
+        "totalChapters": 550,
+        "coverImagePath": "Images/default_cover.jpg"
+      },
+      {
+        "volumeNumber": 0,
+        "volumeTitle": "Art Book",
+        "fileName": "omniscient_readers_viewpoint_vol_0_art_book.json",
+        "totalChapters": 1,
+        "coverImagePath": "Images/default_cover.jpg"
       }
     ]
   },
   {
     "seriesName": "Lord of The Mysteries",
+    "coverImagePath": "Images/Novel-Covers/Lord-of-The-Mysteries.jpg",
     "volumes": [
+      {
+        "volumeNumber": 0,
+        "volumeTitle": "Art Book",
+        "fileName": "lord_of_the_mysteries_vol_0_art_book.json",
+        "totalChapters": 1,
+        "coverImagePath": "Images/default_cover.jpg"
+      },
       {
         "volumeNumber": 1,
         "volumeTitle": "Clown - LotM Vol. 1",
         "fileName": "lord_of_the_mysteries_vol_1_clown___lotm_vol__1.json",
-        "totalChapters": 213
+        "totalChapters": 213,
+        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-1.jpg"
       },
       {
         "volumeNumber": 2,
         "volumeTitle": "Faceless - LotM Vol. 2",
         "fileName": "lord_of_the_mysteries_vol_2_faceless___lotm_vol__2.json",
-        "totalChapters": 269
+        "totalChapters": 269,
+        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-2.jpeg"
       },
       {
         "volumeNumber": 3,
         "volumeTitle": "Traveler - LotM Vol. 3",
         "fileName": "lord_of_the_mysteries_vol_3_traveler___lotm_vol__3.json",
-        "totalChapters": 250
+        "totalChapters": 250,
+        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-3.jpeg"
       },
       {
         "volumeNumber": 4,
         "volumeTitle": "Undying - LotM Vol. 4",
         "fileName": "lord_of_the_mysteries_vol_4_undying___lotm_vol__4.json",
-        "totalChapters": 213
+        "totalChapters": 213,
+        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-4.jpg"
       },
       {
         "volumeNumber": 5,
         "volumeTitle": "Red Priest - LotM Vol. 5",
         "fileName": "lord_of_the_mysteries_vol_5_red_priest___lotm_vol__5.json",
-        "totalChapters": 204
+        "totalChapters": 204,
+        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-5.jpg"
       },
       {
         "volumeNumber": 6,
         "volumeTitle": "Lightseeker - LotM Vol. 6",
         "fileName": "lord_of_the_mysteries_vol_6_lightseeker___lotm_vol__6.json",
-        "totalChapters": 116
+        "totalChapters": 116,
+        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-6.jpg"
       },
       {
         "volumeNumber": 7,
         "volumeTitle": "The Hanged Man - LotM Vol. 7",
         "fileName": "lord_of_the_mysteries_vol_7_the_hanged_man___lotm_vol__7.json",
-        "totalChapters": 87
+        "totalChapters": 87,
+        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-7.jpeg"
       },
       {
         "volumeNumber": 8,
         "volumeTitle": "Fool - LotM Vol. 8",
         "fileName": "lord_of_the_mysteries_vol_8_fool___lotm_vol__8.json",
-        "totalChapters": 42
+        "totalChapters": 42,
+        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-8.jpeg"
       },
       {
         "volumeNumber": 9,
         "volumeTitle": "Side Stories - LotM Vol. 9",
         "fileName": "lord_of_the_mysteries_vol_9_side_stories___lotm_vol__9.json",
-        "totalChapters": 40
+        "totalChapters": 40,
+        "coverImagePath": "Images/Volume-Covers/Lord-of-The-Mysteries/lord-of-the-mysteries-9.webp"
+      }
+    ]
+  },
+  {
+    "seriesName": "The Beginning After the End",
+    "coverImagePath": "Images/Novel-Covers/The-Beginning-After-the-End.jpg",
+    "volumes": [
+      {
+        "volumeNumber": 1,
+        "volumeTitle": "Early Years - Volume 1",
+        "fileName": "the_beginning_after_the_end_vol_1_early_years___volume_1.json",
+        "totalChapters": 22,
+        "coverImagePath": "Images/Volume-Covers/The-Beginning-After-the-End/the-beginning-after-the-end-1.jpg"
+      },
+      {
+        "volumeNumber": 2,
+        "volumeTitle": "New Heights - Volume 2",
+        "fileName": "the_beginning_after_the_end_vol_2_new_heights___volume_2.json",
+        "totalChapters": 22,
+        "coverImagePath": "Images/Volume-Covers/The-Beginning-After-the-End/the-beginning-after-the-end-2.jpeg"
+      },
+      {
+        "volumeNumber": 3,
+        "volumeTitle": "Beckoning Fates - Volume 3",
+        "fileName": "the_beginning_after_the_end_vol_3_beckoning_fates___volume_3.json",
+        "totalChapters": 26,
+        "coverImagePath": "Images/Volume-Covers/The-Beginning-After-the-End/the-beginning-after-the-end-3.jpg"
+      },
+      {
+        "volumeNumber": 4,
+        "volumeTitle": "Horizons Edge - Volume 4",
+        "fileName": "the_beginning_after_the_end_vol_4_horizons_edge___volume_4.json",
+        "totalChapters": 29,
+        "coverImagePath": "Images/Volume-Covers/The-Beginning-After-the-End/the-beginning-after-the-end-4.jpeg"
+      },
+      {
+        "volumeNumber": 5,
+        "volumeTitle": "Convergence - Volume 5",
+        "fileName": "the_beginning_after_the_end_vol_5_convergence___volume_5.json",
+        "totalChapters": 41,
+        "coverImagePath": "Images/Volume-Covers/The-Beginning-After-the-End/the-beginning-after-the-end-5.jpg"
+      },
+      {
+        "volumeNumber": 6,
+        "volumeTitle": "Transcendence - Volume 6",
+        "fileName": "the_beginning_after_the_end_vol_6_transcendence___volume_6.json",
+        "totalChapters": 56,
+        "coverImagePath": "Images/Volume-Covers/The-Beginning-After-the-End/the-beginning-after-the-end-6.jpg"
+      },
+      {
+        "volumeNumber": 7,
+        "volumeTitle": "Divergence - Volume 7",
+        "fileName": "the_beginning_after_the_end_vol_7_divergence___volume_7.json",
+        "totalChapters": 55,
+        "coverImagePath": "Images/Volume-Covers/The-Beginning-After-the-End/the-beginning-after-the-end-7.jpg"
+      },
+      {
+        "volumeNumber": 8,
+        "volumeTitle": "Ascension - Volume 8",
+        "fileName": "the_beginning_after_the_end_vol_8_ascension___volume_8.json",
+        "totalChapters": 72,
+        "coverImagePath": "Images/Volume-Covers/The-Beginning-After-the-End/the-beginning-after-the-end-8.webp"
+      },
+      {
+        "volumeNumber": 9,
+        "volumeTitle": "Reckoning - Volume 9",
+        "fileName": "the_beginning_after_the_end_vol_9_reckoning___volume_9.json",
+        "totalChapters": 61,
+        "coverImagePath": "Images/Volume-Covers/The-Beginning-After-the-End/the-beginning-after-the-end-9.jpg"
+      },
+      {
+        "volumeNumber": 10,
+        "volumeTitle": "Retribution - Volume 10",
+        "fileName": "the_beginning_after_the_end_vol_10_retribution___volume_10.json",
+        "totalChapters": 46,
+        "coverImagePath": "Images/Volume-Covers/The-Beginning-After-the-End/the-beginning-after-the-end-10.jpg"
+      },
+      {
+        "volumeNumber": 11,
+        "volumeTitle": "Providence - Volume 11",
+        "fileName": "the_beginning_after_the_end_vol_11_providence___volume_11.json",
+        "totalChapters": 55,
+        "coverImagePath": "Images/Volume-Covers/The-Beginning-After-the-End/the-beginning-after-the-end-11.webp"
+      },
+      {
+        "volumeNumber": 12,
+        "volumeTitle": "Apotheosis - Volume 12",
+        "fileName": "the_beginning_after_the_end_vol_12_apotheosis___volume_12.json",
+        "totalChapters": 47,
+        "coverImagePath": "Images/Volume-Covers/The-Beginning-After-the-End/the-beginning-after-the-end-12.webp"
       }
     ]
   }

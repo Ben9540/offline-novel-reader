@@ -1,12 +1,12 @@
-const CORE_UI_CACHE = "novel-reader-v4";
-const DATA_CACHE = "volume-downloads-v4";
+const CORE_UI_CACHE = "novel-reader-v5";
+const DATA_CACHE = "volume-downloads-v5";
 
 const essentialFiles = [
     "index.html",
     "app.js",
     "style.css",
     "manifest.json",
-    "temp_novelApp_cover.png",
+    "Images/",
     "Novel-Library/index.json"
 ];
 

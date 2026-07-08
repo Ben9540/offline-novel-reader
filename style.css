@@ -193,13 +193,17 @@ Classes
 }
 
 /* When the item has the downloaded class */
-.status-downloaded .bookCover::after {
+.bookCover.status-downloaded::after {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
     background-color: rgba(0, 255, 0, 0.4); /* Green tint */
     opacity: 1;
 }
 
 /* When the item has the missing class */
-.status-missing .bookCover::after {
+.bookCover.status-missing::after {
     background-color: rgba(255, 0, 0, 0.4); /* Red tint */
     opacity: 1;
 }
@@ -224,19 +228,19 @@ Main Menu
 */
 
 #lordOfTheMysteries{
-    background-image: url("Novel-Covers/lotm_generic_cover.jpg");
+    background-image: url("Images/Novel-Covers/Lord-of-the-Mysteries.jpg");
 }
 
 #theBeginningAfterTheEnd{
-    background-image: url("Novel-Covers/tbate_generic_cover.jpg");
+    background-image: url("Images/Novel-Covers/The-Beginning-After-the-end.jpg");
 }
 
 #shadowSlave{
-    background-image: url("Novel-Covers/shadowSlave_generic_cover.jpg");
+    background-image: url("Images/Novel-Covers/Shadow-Slave.jpg");
 }
 
 #omniscientReadersViewpoint{
-    background-image: url("Novel-Covers/orv_generic_cover.jpg");
+    background-image: url("Images/Novel-Covers/Omniscient-Readers-Viewpoint.jpg");
 }
 
 /*
@@ -253,7 +257,7 @@ Reader View
 */
 
 #reader.active {
-    display: block; 
+    display: block !important; 
 }
 
 #reader {
@@ -333,14 +337,15 @@ Reader View
 }
 
 #chapterContent {
-    height: 100%;
-    width: 100%;
-    overflow-y: auto; 
-    overflow-x: hidden; 
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
+    height: 100% !important;
+    width: 100% !important;
+    overflow-y: auto !important; 
+    overflow-x: hidden !important; 
+    padding-top: 50px;
+    padding-bottom: 300px;
     padding-left: 20px;
     padding-right: 20px;
+    flex-direction: column;
 }
 
 #chapterContent p {
@@ -350,6 +355,64 @@ Reader View
     white-space: pre-wrap;
     word-wrap: break-word; 
     margin-bottom: 20px;
+}
+
+/*
+-----------------------------
+Art Gallery Mode
+-----------------------------
+*/
+
+/* 1. The Scrollable Wrapper (Fills the screen and provides the gray background) */
+#galleryWrapper {
+    width: 100%;
+    height: 100%; /* Required for scrolling when body is fixed */
+    background-color: var(--bg-color); /* Your Discord Gray */
+    overflow-y: auto; 
+    overflow-x: hidden;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: 80px; /* Leaves space so the bottom images don't hide under your TLM button */
+}
+
+/* 2. The Masonry Container (Shrinks to fit columns and centers itself) */
+.gallery-masonry-container {
+    margin: 0 auto; /* Magic trick that centers the grid inside the wrapper */
+}
+
+/* 3. The Individual Items */
+.generic-gallery-item {
+    width: 120px; /* Smaller, reasonable size for dynamic multi-column packing */
+    margin-bottom: 8px; /* Vertical gap between images */
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #1e1f22; /* Dark placeholder while image loads */
+    
+    /* Hardware acceleration to make scrolling smooth */
+    transform: translateZ(0); 
+}
+
+.generic-gallery-item:active {
+    transform: scale(0.97);
+    filter: brightness(0.7);
+}
+
+#generic-lightbox-overlay {
+    position: fixed; 
+    inset: 0; /* Magic shorthand for top 0, left 0, right 0, bottom 0 */
+    background-color: rgba(10, 10, 10, 0.95);
+    z-index: 9999; /* Forces it over the top menu bars */
+    
+    /* Center everything perfectly */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#generic-lightbox-image {
+    max-width: 95vw;
+    max-height: 80vh;
+    object-fit: contain; /* Prevents the artwork from ever squashing or stretching */
 }
 
 /*
@@ -465,7 +528,6 @@ Main TLM
     border: none;
     color: var(--text-color);
     
-    background-image: url(Button\ Images/hamburger_icon.jpg); 
     background-size: 40%; 
     background-repeat: no-repeat;
     background-position: center;

@@ -89,14 +89,19 @@
         </div>
     </div>
 
+
+
     <div id="reader" class="hidden">
         <button id="b_mainTLM" class="active"> 
         <!-- Is it maybe better for this to be a div? i just dont know how to do that. -->
         </button>
-        <div id="chapterContent"> 
+        <div id="chapterContent" class="hidden"> 
             <p>"Lord of Mysteries Volume 1: Clown Chapter 199: Successful Toss of the Die The beating heart, the yellowish-green liquid, the silently burning black flames, and the falling figure entered Klein’s field of vision and etched themselves deeply into Klein’s mind. The most dangerous mission he had encountered up to this date had been when he was dealing with Ray Bieber who was in the midst of digesting. Even such a terrifying and dangerous monster had only resulted in severe injuries to the Beyonders on the mission. No one had to sacrifice their lives. The deaths of the Beyonders Klein had witnessed, including Old Neil’s, were all due to them losing control. The “murderer” might be strange and indescribable or related to evil gods, but they had nothing to do with the missions they undertook. Now, he was looking at one of his partners being killed in action. The death was purely due to one mistake. Nighthawks were fighting against madness, but so were they also fighting against danger. There might never be an opportunity to make up for that one mistake. Klein’s thoughts erupted with a boom. Apparently having taken a huge blow, he knelt down and lifted his right hand, firing successive shots at Madam Sharon. The silver demon hunting bullets pierced through the invisible threads and shot towards her head and transparent sleeping gown. Suddenly, Madam Sharon appeared to be yanked in another direction by something, allowing her to successfully</p>
             <!-- There should be optional header text about different chapter and series info, but idk if thats a js insertion thing or what. --> 
-            </div>
+        </div>
+        <div id="galleryWrapper" class="hidden">
+            <div id="galleryGrid" class="gallery-masonry-container"></div>
+        </div>
         <div id="overlayContainer" class="hidden"> 
             <!-- I added this cuz I was told to in order to stop scrolling of text while menu is open, but I would rather actually have it where when non menu (the reader screen) is pressed the menu goes away and no data (if color is open for example) is changed since the last change (the choice changes should be in real time and not something that updates when the menu closes) -->
             <div id="mainTLM" class="tlmShared hidden">
@@ -170,9 +175,14 @@
                 <!-- Ill just save this for later, like at the end lol -->
             </div>
         </div>
+        <div id="generic-lightbox-overlay" class="hidden">
+            <div id="generic-lightbox-text">Title Goes Here</div>
+            <img id="generic-lightbox-image" src="" alt="High-Res Artwork">
+        </div>
  
     </div>
  
+    <script src="masonry.pkgd.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

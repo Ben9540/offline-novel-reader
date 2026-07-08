@@ -1,0 +1,39 @@
+{
+  "volumeName": "Art Gallery",
+  "chapters": [
+    {
+      "chapterNumber": 1,
+      "title": "Gallery",
+      "content": [
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-18.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-24.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-25.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-19.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-26.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-22.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-23.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-21.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-20.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-7.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-6.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-4.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-5.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-1.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-2.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-3.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-8.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-9.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-11.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-10.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-12.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-13.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-17.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-16.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-14.jpg",
+        "Images/Art/Omniscient-Readers-Viewpoint/orv-cover-art-15.jpg"
+      ]
+    }
+  ],
+  "volumeNumber": 0,
+  "isArt": true
+}

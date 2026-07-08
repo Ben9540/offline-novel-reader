@@ -1,0 +1,29 @@
+{
+  "volumeName": "Art Gallery",
+  "chapters": [
+    {
+      "chapterNumber": 1,
+      "title": "Gallery",
+      "content": [
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-card-5.jpeg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-art-tarot-club.webp",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-card-12.jpeg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-card-9.jpeg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-card-8.jpeg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-card-13.jpeg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-card-4.jpeg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-card-3.jpeg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-card-2.jpeg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-card-1.jpeg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-club-3.jpg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-card-7.jpg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-card-6.jpg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-club-2.jpg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-card-10.jpeg",
+        "Images/Art/Lord-of-The-Mysteries/lotm-fanart-tarot-card-11.jpeg"
+      ]
+    }
+  ],
+  "volumeNumber": 0,
+  "isArt": true
+}

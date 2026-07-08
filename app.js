@@ -1,3 +1,4 @@
+
 // ========================================================================== //
 // 1. GLOBAL STATE & CONFIGURATION
 // ========================================================================== //
@@ -12,6 +13,7 @@ const AppState = {
         currentScroll: null,
 
         loadedVolume: null,
+        loadedArtBook: null,
 
         activeMenu: null,
         activeTLM: null,
@@ -19,6 +21,8 @@ const AppState = {
 
         currentButtonPositionX: null,
         currentButtonPositionY: null,
+
+        isArtBook: null,
 
         settings: {
             currentTextColor: null,
@@ -59,10 +63,11 @@ const tlmList = ["mainTLM", "chapterSelect", "settings", "colorListText", "color
 
 async function main(){
     registerServiceWorker();
+    getFromLocalStorage();
     await allTLMInit();
+    readerInit();
     await loadLibraryIndex();
     volumeMenuInit();
-    getFromLocalStorage();
 }
 
 function mainMenuInit(){}
@@ -88,6 +93,16 @@ async function allTLMInit(){
     chooseChapTLMInit();
     textColorTLMInit();
     bgColorTLMInit();
+}
+
+function readerInit(){
+    // Allow clicking the background to close it
+    document.getElementById("generic-lightbox-overlay").addEventListener("pointerup", (e) => {
+        // Prevents the menu from closing if they accidentally tap the image itself
+        if (e.target.id !== "generic-lightbox-image") {
+            closeGenericLightbox();
+        }
+    });
 }
 
 async function toggleDownloadMode() {
@@ -161,8 +176,8 @@ async function toggleDownloadMode() {
 async function tlmButtonInit(){
     let isPointerDown = false;
     let isDragging = false;
-    let startX = AppState.storedData.buttonPositionX;
-    let startY = AppState.storedData.buttonPositionY;
+    let startX = 0;
+    let startY = 0;
     let clickOffsetX = 0;
     let clickOffsetY = 0;
 
@@ -171,6 +186,15 @@ async function tlmButtonInit(){
     getSavedPos();
     updateSavedPos();
     getSavedPos();
+
+    const savedX = AppState.storedData.buttonPositionX;
+    const savedY = AppState.storedData.buttonPositionY;
+
+    // Explicitly paint the element using inline CSS
+    if (savedX !== null && savedY !== null) {
+        tlmButton.style.left = savedX;
+        tlmButton.style.top = savedY;
+    }
 
     tlmButton.addEventListener("pointerdown", (e) => {
         isPointerDown = true;
@@ -227,6 +251,7 @@ async function tlmButtonInit(){
             AppState.activeSession.currentButtonPositionX = newLeft + "px";
             AppState.activeSession.currentButtonPositionY = newTop + "px";
             updateSavedPos();
+            saveToLocalStorage(AppState.storedData);
         }
     });
 
@@ -270,6 +295,7 @@ function mainTLMInit(){
     });
     tlmPrevChapButton.addEventListener("pointerup", () => {
         switchChapter("previous");
+        closeTLM("none");
     });
     tlmChooseChapButton.addEventListener("pointerup", (e) => {
         e.stopPropagation();
@@ -277,6 +303,7 @@ function mainTLMInit(){
     });
     tlmNextChapButton.addEventListener("pointerup", () => {
         switchChapter("next");
+        closeTLM("none");
     });
 }
 
@@ -329,6 +356,7 @@ function openTLM(tlmID, buttonElement) {
     AppState.activeSession.activeTLM = tlmID;
     AppState.activeSession.triggeringButton = buttonElement;
 
+    
     overlayContainer.classList.replace("hidden", "active");
     targetTLM.classList.replace("hidden", "active");
 
@@ -516,9 +544,11 @@ async function buildMainMenu(){
     menuTopP.classList.add("currentSeriesText");
     if (AppState.storedData.lastNovel == null) {
         menuTopP.innerHTML = "Start Reading Something!"
-    } else{
+    } else if (AppState.activeSession.currentNovel == null) {
         getSaveData(AppState.storedData.lastNovel);
-        menuTopP.innerHTML = "Last Novel: " + AppState.storedData.lastNovel + "Chapter: " + AppState.activeSession.currentChapter;
+        menuTopP.innerHTML = `<B> Last Novel: </B>${AppState.storedData.lastNovel} <B> Chapter: </B> ${AppState.activeSession.currentChapter}`;
+    } else {
+        menuTopP.innerHTML = `<B> Last Novel: </B>${AppState.storedData.lastNovel} <B> Chapter: </B> ${AppState.activeSession.currentChapter}`;
     }
 
     novelMenuBar.appendChild(menuTopH);
@@ -539,6 +569,7 @@ async function buildMainMenu(){
         const coverDiv = document.createElement("div");
         coverDiv.id = novelCamelCase;
         coverDiv.classList.add("bookCover");
+        coverDiv.style.backgroundImage = `url('${novelContainer.coverImagePath}')`;
 
         const titleDiv = document.createElement("p");
         titleDiv.classList.add("bookTitle");
@@ -572,6 +603,7 @@ async function buildVolumeMenu(novelName){
     const volumeMenuBar = document.getElementById("volumeInfoBar");
     const volumeMenuBooks = document.getElementById("volumeMenuBooks");
 
+    AppState.activeSession.isArtBook = false;
     getSaveData(novelName);
 
     volumeMenuBar.innerHTML = "";
@@ -612,6 +644,7 @@ async function buildVolumeMenu(novelName){
         coverDiv.classList.add("volumeBookCover");
         coverDiv.setAttribute("data-file-url", 'Novel-Library/' + volume.fileName);
         console.log("attribute: " + coverDiv.getAttribute("data-file-url"));
+        coverDiv.style.backgroundImage = `url('${volume.coverImagePath}')`
 
         const titleDiv = document.createElement("p");
         titleDiv.classList.add("bookTitle");
@@ -653,9 +686,15 @@ async function buildVolumeMenu(novelName){
                 if (!wasHeld) {
                     clearTimeout(pressTimer);
                     console.log("This is a TAP! Continue reading.");
-                    AppState.activeSession.currentVolume = volume.volumeNumber;
-                    updateSaveData();
-                    openReader();
+                    if (volume.volumeNumber != 0) {
+                        AppState.activeSession.isArtBook = false;
+                        AppState.activeSession.currentVolume = volume.volumeNumber;
+                        updateSaveData();
+                        openReader();
+                    } else {
+                        AppState.activeSession.isArtBook = true;
+                        openReader();
+                    }
                 }
             }
         });
@@ -680,49 +719,121 @@ async function buildReader(){
     }
     const chapterContainer = document.getElementById("chapterContent");
     chapterContainer.innerHTML = "";
+    const gallryWrapper = document.getElementById("galleryWrapper");
 
-    const currentChapter = AppState.activeSession.currentChapter;
-    const currentFullVolume = AppState.activeSession.loadedVolume;
+    let desiredChapter;
 
-    let desiredChapter = currentFullVolume.chapters.find(chapter => chapter.chapterNumber === currentChapter);
+    if (!AppState.activeSession.isArtBook) {
 
-    if (desiredChapter == undefined){
+        const currentChapter = AppState.activeSession.currentChapter;
+        const currentFullVolume = AppState.activeSession.loadedVolume;
+
+        desiredChapter = currentFullVolume.chapters.find(chapter => chapter.chapterNumber === currentChapter);
+
+        if (desiredChapter == undefined){
+            desiredChapter = currentFullVolume.chapters[0];
+        }
+
+        AppState.activeSession.currentChapter = desiredChapter.chapterNumber;
+
+        updateSaveData();
+        
+        const chapterData = desiredChapter.content;
+    } else {
+        const currentChapter = 1;
+        const currentFullVolume = AppState.activeSession.loadedArtBook;
+
         desiredChapter = currentFullVolume.chapters[0];
     }
-
-    AppState.activeSession.currentChapter = desiredChapter.chapterNumber;
-
-    updateSaveData();
-    
     const chapterData = desiredChapter.content;
 
-    chapterData.forEach(paragraph =>{
-        const newParagraph = document.createElement("p");
-        newParagraph.textContent = paragraph;
+    if (AppState.activeSession.isArtBook) {
+        chapterContainer.classList.replace("active", "hidden");
+        gallryWrapper.classList.replace("hidden", "active");
+        const galleryGrid = document.getElementById("galleryGrid");
+        galleryGrid.innerHTML = "";
 
-        chapterContainer.appendChild(newParagraph);
-    });
-    getSaveData(AppState.activeSession.currentNovel);
-    chapterContainer.scrollTop = AppState.activeSession.currentScroll;
+
+        // 2. Loop through the "paragraphs" (which are actually image paths)
+        AppState.activeSession.loadedArtBook.chapters[0].content.forEach(imagePath => {
+        // MUST be an img element, not a div
+            const img = document.createElement("img");
+            img.src = imagePath;
+            img.className = "generic-gallery-item"; // Uniform target for Masonry
+
+            // Attach the lightbox trigger
+            img.addEventListener("pointerup", () => {
+                openGenericLightbox(imagePath);
+            });
+
+            galleryGrid.appendChild(img);
+        });
+        // Initialize Masonry OUTSIDE your rendering loop
+        const msnry = new Masonry(galleryGrid, {
+            itemSelector: '.generic-gallery-item',
+            
+            // 1. Tell Masonry the exact width of our base items
+            columnWidth: 55, 
+            
+            // 2. Define the horizontal gap between columns (10px matches our margin-bottom)
+            gutter: 10, 
+            
+            // 3. This forces Masonry to center the grid perfectly inside the container
+            fitWidth: true, 
+            
+            transitionDuration: '0.2s'
+        });
+
+        // The Offline Image Loading Hack (Required for Masonry)
+        const allGeneratedImages = document.querySelectorAll('.generic-gallery-item');
+        allGeneratedImages.forEach(img => {
+            img.onload = () => {
+                msnry.layout(); 
+            };
+        });
+    } else {
+        chapterContainer.classList.replace("hidden", "active");
+        gallryWrapper.classList.replace("active", "hidden");
+        chapterData.forEach(paragraph =>{
+            const newParagraph = document.createElement("p");
+            newParagraph.textContent = paragraph;
+
+            chapterContainer.appendChild(newParagraph);
+        });
+        getSaveData(AppState.activeSession.currentNovel);
+        chapterContainer.scrollTop = AppState.activeSession.currentScroll;
+    }
 }
 
 async function fetchVolume() {
     novelName = AppState.activeSession.currentNovel;
-    getSaveData(novelName);
-    const currentNovelObj = AppState.library.find(series => series.seriesName === novelName);
-    const volumesList = currentNovelObj.volumes;
-    console.log(volumesList);
-    console.log(AppState.activeSession.currentVolume);
-    const currentVolumeObj = volumesList.find(volume => volume.volumeNumber === AppState.activeSession.currentVolume);
-    console.log(currentVolumeObj);
-    const fileName = currentVolumeObj.fileName;
+    let fileName;
+    if (!AppState.activeSession.isArtBook){
+        getSaveData(novelName);
+        const currentNovelObj = AppState.library.find(series => series.seriesName === novelName);
+        const volumesList = currentNovelObj.volumes;
+        console.log(volumesList);
+        console.log(AppState.activeSession.currentVolume);
+        const currentVolumeObj = volumesList.find(volume => volume.volumeNumber === AppState.activeSession.currentVolume);
+        console.log(currentVolumeObj);
+        fileName = currentVolumeObj.fileName;
+    } else {
+        const currentNovelObj = AppState.library.find(series => series.seriesName === novelName);
+        const artBook = currentNovelObj.volumes[0];
+        fileName = artBook.fileName;
+    }
+
 
     try {
         const response = await fetch('Novel-Library/' + fileName);
         const volumeFetchData = await response.json();
         
-        AppState.activeSession.loadedVolume = volumeFetchData;
-        updateSaveData();
+        if (AppState.activeSession.isArtBook){
+            AppState.activeSession.loadedArtBook = volumeFetchData;
+        } else {
+            AppState.activeSession.loadedVolume = volumeFetchData;
+            updateSaveData();
+        }
         
         console.log("Volume loaded successfully:", AppState.activeSession.loadedVolume);
     } catch (error) {
@@ -795,7 +906,91 @@ function viewSwitcher(targetViewId) {
     });
 }
 
+// Generic Example: Do not copy-paste directly. Map to your architecture.
 
+function formatVolumeName(rawText) {
+    // Converts "My Novel Name" into "my-novel-name"
+    return rawText.toLowerCase().replace(/\s+/g, '-');
+}
+
+function formatSeriesName(rawText) {
+    // Converts "My Novel Name" into "my-novel-name"
+    return rawText.replace(/\s+/g, '-');
+}
+
+function applyCoverWithFallbacks(targetHtmlElement, seriesName, volumeNumber) {
+    const safeSeriesStringPic = formatVolumeName(seriesName);
+    const specificBookFile = `${safeSeriesStringPic}-${volumeNumber}`;
+    const safeSeriesString = formatSeriesName(seriesName)
+
+    // Define the priority order of images to test
+    const targetPaths = [
+        `Images/Volume-Covers/${safeSeriesString}/${specificBookFile}.png`,
+        `Images/Volume-Covers/${safeSeriesString}/${specificBookFile}.jpg`,
+        `Images/Volume-Covers/${safeSeriesString}/${specificBookFile}.webp`,
+        `Images/Volume-Covers/${safeSeriesString}/${specificBookFile}.jpeg`,
+        `Images/Novel-Covers/${safeSeriesString}.png`,
+        `Images/Novel-Covers/${safeSeriesString}.jpg`,
+        `Images/Novel-Covers/${safeSeriesString}.jpeg`,
+        `Images/Novel-Covers/${safeSeriesString}.webp`
+    ];
+
+    function tryLoadingImage(pathsArray) {
+        // Base case: We ran out of URLs to test.
+        // It fails gracefully by doing nothing, allowing your default CSS styling to show.
+        if (pathsArray.length === 0) return; 
+
+        const testerImage = new Image();
+        
+        testerImage.onload = () => {
+            // The image was found successfully. Apply it.
+            targetHtmlElement.style.backgroundImage = `url('${pathsArray[0]}')`;
+            targetHtmlElement.style.backgroundSize = "cover";
+            targetHtmlElement.style.backgroundPosition = "center";
+        };
+        
+        testerImage.onerror = () => {
+            // The file does not exist. Slice the array and test the next format in line.
+            tryLoadingImage(pathsArray.slice(1));
+        };
+
+        // This triggers the network request (which your Bouncer will intercept)
+        testerImage.src = pathsArray[0];
+    }
+
+    // Start the testing sequence
+    tryLoadingImage(targetPaths);
+}
+
+
+function formatArtTitle(rawFilePath) {
+    const fileNameWithExt = rawFilePath.split('/').pop(); // Gets "cool-sword.jpg"
+    const rawName = fileNameWithExt.split('.')[0]; // Gets "cool-sword"
+    return rawName.replace(/-/g, ' '); // Replaces hyphens with spaces
+}
+
+function openGenericLightbox(imagePath) {
+    const overlay = document.getElementById("generic-lightbox-overlay");
+    const imageEl = document.getElementById("generic-lightbox-image");
+    const textEl = document.getElementById("generic-lightbox-text");
+
+    textEl.innerHTML = formatArtTitle(imagePath);
+    imageEl.src = imagePath;
+
+    overlay.classList.replace("hidden", "active");
+}
+
+function closeGenericLightbox() {
+    document.getElementById("generic-lightbox-overlay").classList.replace("active", "hidden");
+}
+
+// Allow clicking the background to close it
+document.getElementById("generic-lightbox-overlay").addEventListener("pointerup", (e) => {
+    // Prevents the menu from closing if they accidentally tap the image itself
+    if (e.target.id !== "generic-lightbox-image") {
+        closeGenericLightbox();
+    }
+});
 // ========================================================================== //
 // 7. SAVE DATA MANAGEMENT
 // ========================================================================== //
@@ -830,6 +1025,8 @@ function saveToLocalStorage(dataObject){
     const dataString = JSON.stringify(dataObject);
     localStorage.setItem(STORAGE_KEY, dataString);
 }
+
+
 
 function getFromLocalStorage(){
     const savedString = localStorage.getItem(STORAGE_KEY);
@@ -867,7 +1064,7 @@ function updateSaveData(){
         chapter: AppState.activeSession.currentChapter,
         scroll: AppState.activeSession.currentScroll
     };
-    saveToLocalStorage(AppState.storedData)
+    saveToLocalStorage(AppState.storedData);
 }
 
 function getSavedPos(){
