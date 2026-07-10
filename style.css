@@ -274,7 +274,7 @@ Reader View
     width: 100%;
     z-index: 1;
     overflow: hidden; 
-    padding-bottom: env(safe-area-inset-bottom) !important;
+    inset: 0;
 }
 
 #b_mainTLM {

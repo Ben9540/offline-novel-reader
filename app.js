@@ -219,7 +219,7 @@ function deleteVolumeDownload(volumeURL){
 
 function viewSwitcher(targetViewId) {
     if (targetViewId === "mainMenu") buildMainMenu();
-    if (window.currentObserver) {
+    if (window.currentObserver && targetViewId != "reader") {
         window.currentObserver.disconnect();
     }
     viewList.forEach(viewId => {
@@ -558,7 +558,7 @@ async function buildReader() {
         window.currentObserver = new IntersectionObserver((entries) => {
             // If the tripwire enters the screen...
             if (entries[0].isIntersecting && AppState.activeSession.currentArtIndex < fullStringArray.length) {
-                renderImageChunk(   );
+                renderImageChunk();
             }
         }, {
             root: document.getElementById("galleryWrapper"), // Forces math to calculate inside this specific div
