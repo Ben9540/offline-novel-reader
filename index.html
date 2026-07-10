@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- These meta tags make it behave like a native iOS app -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -100,7 +100,10 @@
             <!-- There should be optional header text about different chapter and series info, but idk if thats a js insertion thing or what. --> 
         </div>
         <div id="galleryWrapper" class="hidden">
-            <div id="galleryGrid" class="gallery-masonry-container"></div>
+            <div id="galleryGrid" class="gallery-masonry-container">
+
+            </div>
+                            <div id="generic-scroll-trigger" style="height: 20px; width: 100%;"></div>
         </div> 
         <div id="overlayContainer" class="hidden"> 
             <!-- I added this cuz I was told to in order to stop scrolling of text while menu is open, but I would rather actually have it where when non menu (the reader screen) is pressed the menu goes away and no data (if color is open for example) is changed since the last change (the choice changes should be in real time and not something that updates when the menu closes) -->
@@ -145,12 +148,23 @@
                 <button id="b_stats" class="b_settingsInner"> Chapter Info <!-- this one can maybe also open a menu where you choose which stats will be displayed, but I can add that later --></button>
                 <button id="b_resetDefaults" class="b_settingsInner"> Reset Defaults</button>
             </div>
+            <div id="fontList" class="tlmShared colorList hidden"> 
+                <div class="colorTopButtonsContainer">
+                    <button id="b_fontBack" class="b_back">Back</button>
+                </div>
+                <div id="fontChoicesContainer" class="colorChoicesContainer">
+                    <div id="exampleColor" class="colorChoice">
+                        <!-- This is an example color div, these will be populated by js, but ill have a few in by default anyways. they are selectable but idk how to make it so you can select a div -->
+                        <div class="colorText">Red But Like Super Long</div>
+                    </div> 
+                </div>
+            </div>
             <div id="colorListText" class="tlmShared colorList hidden">
                 <div class="colorTopButtonsContainer">
-                    <button id="b_colorBack" class="b_back">Back</button>
+                    <button id="b_colorBackText" class="b_back">Back</button>
                     <button class="b_addColor"> + </button>
                 </div>
-                <div id="colorChoicesContainer">
+                <div id="colorChoicesContainerText" class="colorChoicesContainer">
                     <div id="exampleColor" class="colorChoice">
                         <!-- This is an example color div, these will be populated by js, but ill have a few in by default anyways. they are selectable but idk how to make it so you can select a div -->
                         <div class="colorText">Red But Like Super Long</div>
@@ -160,10 +174,10 @@
             </div>
             <div id="colorListBG" class="tlmShared colorList hidden">
                 <div class="colorTopButtonsContainer">
-                    <button id="b_colorBack" class="b_back">Back</button>
+                    <button id="b_colorBackBG" class="b_back">Back</button>
                     <button class="b_addColor"> + </button>
                 </div>
-                <div id="colorChoicesContainer">
+                <div id="colorChoicesContainerBG" class="colorChoicesContainer">
                     <div id="exampleColor" class="colorChoice">
                         <!-- This is an example color div, these will be populated by js, but ill have a few in by default anyways. they are selectable but idk how to make it so you can select a div -->
                         <div class="colorText">Red But Like Super Long</div>

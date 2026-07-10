@@ -90,26 +90,6 @@
     ]
   },
   {
-    "seriesName": "Omniscient Readers Viewpoint",
-    "coverImagePath": "Images/Novel-Covers/Omniscient-Readers-Viewpoint.jpg",
-    "volumes": [
-      {
-        "volumeNumber": 0,
-        "volumeTitle": "Omniscient Reader\u0027s Viewpoint - Sing-shong (singsyong)",
-        "fileName": "omniscient_readers_viewpoint_vol_0_omniscient_reader_s_viewpoint___sing_shong__singsyong_.json",
-        "totalChapters": 550,
-        "coverImagePath": "Images/default_cover.jpg"
-      },
-      {
-        "volumeNumber": 0,
-        "volumeTitle": "Art Book",
-        "fileName": "omniscient_readers_viewpoint_vol_0_art_book.json",
-        "totalChapters": 1,
-        "coverImagePath": "Images/default_cover.jpg"
-      }
-    ]
-  },
-  {
     "seriesName": "Lord of the Mysteries",
     "coverImagePath": "Images/Novel-Covers/Lord-of-the-Mysteries.jpg",
     "volumes": [
@@ -118,7 +98,7 @@
         "volumeTitle": "Art Book",
         "fileName": "lord_of_the_mysteries_vol_0_art_book.json",
         "totalChapters": 1,
-        "coverImagePath": "Images/default_cover.jpg"
+        "coverImagePath": "Images/Volume-Covers/Lord-of-the-Mysteries/lord-of-the-mysteries-0.jpg"
       },
       {
         "volumeNumber": 1,

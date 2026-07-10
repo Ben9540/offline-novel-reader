@@ -5,24 +5,66 @@
 const AppState = {
     library: {},
     activeSession: {
-        currentNovel: null, currentVolume: null, currentChapter: null, currentScroll: null,
-        loadedVolume: null, loadedArtBook: null,
-        activeMenu: null, activeTLM: null, triggeringButton: null,
-        currentButtonPositionX: null, currentButtonPositionY: null,
+        currentNovel: null, 
+        currentVolume: null, 
+        currentChapter: null, 
+        currentScroll: null,
+        
+        loadedVolume: null, 
+        loadedArtBook: null,
+
+        activeMenu: null, 
+        activeTLM: null, 
+        triggeringButton: null,
+
+        currentButtonPositionX: null, 
+        currentButtonPositionY: null,
+
         isArtBook: null,
-        settings: { currentTextColor: null, currentBgColor: null, currentFontSize: null, currentFont: null, currentBgColorList: [], currentTextColorList: [] },
-        isDownloadMode: false
+
+        settings: {},
+
+        isDownloadMode: false,
+
+        currentArtIndex: 0,
+        artChunkSize: 20
     },
     storedData: {
         lastNovel: null, novelSaves: {},
         buttonPositionX: null, buttonPositionY: null,
-        settings: { textColor: null, bgColor: null, fontSize: null, font: null, bgColorList: [], textColorList: [] }
+        settings: {}
+    },
+    defaultSettings: {
+            displayStats: true,
+            textColor: "white", 
+            bgColor: "black", 
+            fontSize: 30, 
+            font: "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+            bgColorList: ["black", "white", "blue", "yellow", "green", "red", "grey", "pink", "purple", "#2b2d31", "rgb(5, 0, 148)", "#4D22B2", "#371A94", "#2C0977", "#1A0A52", "#2E063D"], 
+            textColorList: ["black", "white", "blue", "yellow", "green", "red", "grey", "pink", "purple", "#2b2d31", "rgb(5, 0, 148)", "#4D22B2", "#371A94", "#2C0977", "#1A0A52", "#2E063D"] 
     }
 };
 
 const viewList = ["mainMenu", "volumeMenu", "reader"];
-const tlmList = ["mainTLM", "chapterSelect", "settings", "colorListText", "colorListBG"];
+const tlmList = ["mainTLM", "chapterSelect", "settings", "colorListText", "colorListBG", "fontList"];
 const STORAGE_KEY = "novelReader_offlineSaveData";
+const fontMap = new Map();
+fontMap.set("Default", "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif");
+fontMap.set("Georgia", "Georgia, serif");
+fontMap.set("Time New Roman", "\"Times New Roman\", Times, serif");
+fontMap.set("Palatino", "\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif");
+fontMap.set("Ariel", "Arial, Helvetica, sans-serif");
+fontMap.set("Verdana", "Verdana, Geneva, sans-serif");
+fontMap.set("Trebuchet MS", "\"Trebuchet MS\", Helvetica, sans-serif");
+fontMap.set("Courier", "\"Courier New\", Courier, monospace");
+fontMap.set("Ariel Black", "\"Arial Black\", Gadget, sans-serif");
+fontMap.set("Impact", "Impact, Haettenschweiler, \"Arial Narrow Bold\", sans-serif");
+fontMap.set("Avenir", "\"Avenir Next\", Avenir, \"Helvetica Neue\", Helvetica, Arial, sans-serif");
+fontMap.set("Baskerville", "Baskerville, \"Baskerville Old Face\", \"Hoefler Text\", Garamond, \"Times New Roman\", serif");
+fontMap.set("Garamond", "Garamond, \"Apple Garamond\", \"Palatino Linotype\", Palatino, serif");
+fontMap.set("Consolas", "Consolas, Monaco, \"Andale Mono\", \"Ubuntu Mono\", monospace");
+fontMap.set("Rockwell", "Rockwell, \"Courier Bold\", Courier, Georgia, Times, \"Times New Roman\", serif");
+
 
 // ========================================================================== //
 // 2. BOOTSTRAP & INITIALIZATION
@@ -76,6 +118,7 @@ async function allTLMInit() {
     chooseChapTLMInit();
     textColorTLMInit();
     bgColorTLMInit();
+    fontTLMInit();
 }
 
 function registerServiceWorker() {
@@ -136,8 +179,20 @@ function updateSavedPos(){
     AppState.storedData.buttonPositionY = AppState.activeSession.currentButtonPositionY;
 }
 
+function getSavedSettings(){
+    if (Object.keys(AppState.storedData.settings).length > 0) {
+        AppState.activeSession.settings = AppState.storedData.settings;
+    } else {
+        AppState.activeSession.settings = AppState.defaultSettings;
+    }
+}
+
+function updateSavedSettings(){
+    AppState.storedData.settings = AppState.activeSession.settings;
+}
+
 async function isVolumeDownloaded(desiredURL){
-    const cache = await caches.open("volume-downloads-v6");
+    const cache = await caches.open("volume-downloads-v7");
     const response = await cache.match(desiredURL);
     return !!response; 
 } 
@@ -164,6 +219,9 @@ function deleteVolumeDownload(volumeURL){
 
 function viewSwitcher(targetViewId) {
     if (targetViewId === "mainMenu") buildMainMenu();
+    if (window.currentObserver) {
+        window.currentObserver.disconnect();
+    }
     viewList.forEach(viewId => {
         const element = document.getElementById(viewId);
         if (viewId === targetViewId) element.classList.replace("hidden", "active");
@@ -432,30 +490,98 @@ async function buildReader() {
     }
 
     if (AppState.activeSession.isArtBook) {
+        AppState.activeSession.currentArtIndex = 0;
         chapterContainer.classList.replace("active", "hidden");
         gallryWrapper.classList.replace("hidden", "active");
         const galleryGrid = document.getElementById("galleryGrid");
         galleryGrid.innerHTML = "";
+        const tripWire = document.getElementById("generic-scroll-trigger");
 
+        const fullStringArray = AppState.activeSession.loadedArtBook.chapters[0].content;
+
+        /*
         AppState.activeSession.loadedArtBook.chapters[0].content.forEach(imagePath => {
             const img = document.createElement("img");
             img.src = imagePath;
             img.className = "generic-gallery-item";
             img.addEventListener("pointerup", () => openGenericLightbox(imagePath));
             galleryGrid.appendChild(img);
-        });
+        });*/
 
         const msnry = new Masonry(galleryGrid, {
             itemSelector: '.generic-gallery-item',
-            columnWidth: 55, gutter: 10, fitWidth: true, transitionDuration: '0.2s'
+            columnWidth: '.generic-gallery-item', gutter: 10, fitWidth: true, transitionDuration: '0.2s'
         });
 
-        document.querySelectorAll('.generic-gallery-item').forEach(img => {
-            img.onload = () => msnry.layout(); 
+        let layoutTimer;
+
+        function renderImageChunk() {
+            // 1. Slice out just the next 20 images
+            let currentArtIndex = AppState.activeSession.currentArtIndex;
+            const artChunkSize = AppState.activeSession.artChunkSize;
+            const nextBatch = fullStringArray.slice(currentArtIndex, currentArtIndex + artChunkSize);
+            
+            // 2. Loop through the slice, create elements, and append them
+            nextBatch.forEach(imagePath => {
+                const img = document.createElement("img");
+                img.src = imagePath;
+                img.className = "generic-gallery-item";
+                img.addEventListener("pointerup", () => openGenericLightbox(imagePath));
+                galleryGrid.appendChild(img);
+                
+                // 2. Tell Masonry it exists IMMEDIATELY (so the container grows and pushes the tripwire down)
+                msnry.appended(img);
+                
+                img.onload = () => {
+                    clearTimeout(layoutTimer);
+
+                    layoutTimer = setTimeout( () => {
+                        msnry.layout();
+                    }, 100);
+
+                };
+            });
+
+            // 3. Move the index forward for the next time this runs
+            AppState.activeSession.currentArtIndex += artChunkSize;
+            
+            // 4. Force a layout update for the new batch
+            msnry.layout();
+        }
+
+        renderImageChunk();
+
+        if (window.currentObserver) {
+            window.currentObserver.disconnect();
+        }
+
+        window.currentObserver = new IntersectionObserver((entries) => {
+            // If the tripwire enters the screen...
+            if (entries[0].isIntersecting && AppState.activeSession.currentArtIndex < fullStringArray.length) {
+                renderImageChunk(   );
+            }
+        }, {
+            root: document.getElementById("galleryWrapper"), // Forces math to calculate inside this specific div
+            rootMargin: "200px"
         });
+
+        window.currentObserver.observe(tripWire);
+
     } else {
         chapterContainer.classList.replace("hidden", "active");
         gallryWrapper.classList.replace("active", "hidden");
+        if (AppState.activeSession.settings.displayStats){
+            const wordCount = chapterData.reduce((count, paragraph) => {
+                const words = paragraph.trim().split(/\s+/);
+                return count + (words[0] === "" ? 0 : words.length);
+                }, 0);
+            const statsHeaderSeries = document.createElement("h1");
+            statsHeaderSeries.innerHTML = `<B>${AppState.activeSession.currentNovel}</B>`
+            const statsHeaderChap = document.createElement("h3");
+            statsHeaderChap.innerHTML = `<B>Chapter: </B>${AppState.activeSession.currentChapter} \n<B>Words: </B>${wordCount} `;
+            chapterContainer.appendChild(statsHeaderSeries);
+            chapterContainer.appendChild(statsHeaderChap);
+        }
         chapterData.forEach(paragraph =>{
             const newParagraph = document.createElement("p");
             newParagraph.textContent = paragraph;
@@ -598,7 +724,7 @@ function closeTLM(newTLM){
 
 function mainTLMInit(){
     document.getElementById("b_returnMainMenu").addEventListener("pointerup", () => returnToVolume());
-    document.getElementById("b_settings").addEventListener("pointerup", (e) => { e.stopPropagation(); });
+    document.getElementById("b_settings").addEventListener("pointerup", (e) => { e.stopPropagation(); openSettings()});
     document.getElementById("b_previousChap").addEventListener("pointerup", () => { switchChapter("previous"); closeTLM("none"); });
     document.getElementById("b_selectChap").addEventListener("pointerup", (e) => { e.stopPropagation(); chooseChapter(); });
     document.getElementById("b_nextChap").addEventListener("pointerup", () => { switchChapter("next"); closeTLM("none"); });
@@ -656,6 +782,282 @@ async function buildChapterSelect(){
         });
         choiceContainer.appendChild(chapterChoice);
     }
+}
+
+function settingsTLMInit(){
+    getSavedSettings();
+    document.documentElement.style.setProperty('--active-reader-font-size', AppState.activeSession.settings.fontSize + "px");
+    document.documentElement.style.setProperty('--active-reader-font', AppState.activeSession.settings.font);
+    document.documentElement.style.setProperty('--active-reader-text-color', AppState.activeSession.settings.textColor);
+    document.documentElement.style.setProperty('--active-reader-bg-color', AppState.activeSession.settings.bgColor);
+}
+
+function openSettings(){
+    buildSettings();
+    closeTLM("settings");
+}
+
+function buildSettings(){
+    const settingsContainer = document.getElementById("settings");
+    settingsContainer.innerHTML = "";
+
+    const fontSizeContainer = document.createElement("div");
+    fontSizeContainer.id = "fontSizeContainer";
+
+    const fontSlider = document.createElement("input");
+    fontSlider.id = "fontSlider";
+    fontSlider.type = "range";
+    fontSlider.min = 1;
+    fontSlider.max = 99;
+    fontSlider.value = AppState.activeSession.settings.fontSize;
+
+    const fontInput = document.createElement("input");
+    fontInput.id = "fontInput";
+    fontInput.type = "number";
+    fontInput.min = 1;
+    fontInput.max = 99;
+    fontInput.value = AppState.activeSession.settings.fontSize;
+
+    fontSlider.addEventListener("input", (e) => {
+        const newValue = e.target.value;
+        fontInput.value = newValue;
+        document.documentElement.style.setProperty('--active-reader-font-size', newValue + "px");
+    });
+
+    fontSlider.addEventListener("change", (e) => {
+        AppState.activeSession.settings.fontSize = e.target.value;
+        updateSavedSettings();
+        updateSaveData();
+    });
+
+    fontInput.addEventListener("input", (e) => {
+        const newValue = e.target.value;
+        if (newValue >= 1 && newValue <= 99){
+            fontSlider.value = newValue;
+            document.documentElement.style.setProperty('--active-reader-font-size', newValue + "px");
+        }
+    });
+
+    fontInput.addEventListener("change", (e) => {
+        AppState.activeSession.settings.fontSize = e.target.value;
+        updateSavedSettings();
+        updateSaveData();
+    });
+
+    fontSizeContainer.appendChild(fontSlider);
+    fontSizeContainer.appendChild(fontInput);
+
+    const bgColorSelectButton = document.createElement("button");
+    bgColorSelectButton.id = "b_colorBG";
+    bgColorSelectButton.classList.add("b_settingsInner");
+    bgColorSelectButton.innerHTML = " Background Color";
+    bgColorSelectButton.addEventListener("pointerup", (e) => {
+        e.stopPropagation();
+        openBGColor();
+    });
+
+    const txtColorSelectButton = document.createElement("button");
+    txtColorSelectButton.id = "b_colorFont";
+    txtColorSelectButton.classList.add("b_settingsInner");
+    txtColorSelectButton.innerHTML = " Font Color";
+    txtColorSelectButton.addEventListener("pointerup", (e) => {
+        e.stopPropagation();
+        openTXTColor();
+    }); 
+
+    const fontChoiceButton = document.createElement("button");
+    fontChoiceButton.id = "b_font";
+    fontChoiceButton.classList.add("b_settingsInner");
+    fontChoiceButton.innerHTML = " Font";
+    fontChoiceButton.addEventListener("pointerup", (e) => {
+        e.stopPropagation();
+        openFontSelect();
+    }); 
+    
+    const statsToggleButton = document.createElement("button");
+    statsToggleButton.id = "b_stats";
+    statsToggleButton.classList.add("b_settingsInner");
+    statsToggleButton.innerHTML = " Info Header";
+    if (AppState.activeSession.settings.displayStats == true) statsToggleButton.classList.add("selectedColor");
+    statsToggleButton.addEventListener("pointerup", () => {
+        AppState.activeSession.settings.displayStats = !AppState.activeSession.settings.displayStats;
+        if (AppState.activeSession.settings.displayStats == true){ 
+            statsToggleButton.classList.add("selectedColor");
+        } else {
+            statsToggleButton.classList.remove("selectedColor")
+        }
+        updateSavedSettings();
+        updateSaveData();
+        buildReader();
+    });   
+
+    const resetDefaultsButton = document.createElement("button");
+    resetDefaultsButton.id = "b_resetDefaults";
+    resetDefaultsButton.classList.add("b_settingsInner");
+    resetDefaultsButton.innerHTML = " Reset Defaults";
+    resetDefaultsButton.addEventListener("pointerup", () => {
+        AppState.activeSession.settings = structuredClone(AppState.defaultSettings);
+        document.documentElement.style.setProperty('--active-reader-font-size', AppState.activeSession.settings.fontSize + "px");
+        document.documentElement.style.setProperty('--active-reader-font', AppState.activeSession.settings.font);
+        document.documentElement.style.setProperty('--active-reader-text-color', AppState.activeSession.settings.textColor);
+        document.documentElement.style.setProperty('--active-reader-bg-color', AppState.activeSession.settings.bgColor);
+        updateSavedSettings();
+        updateSaveData();
+        if (AppState.activeSession.settings.displayStats == true) statsToggleButton.classList.add("selectedColor");
+        fontInput.value = AppState.activeSession.settings.fontSize;
+        fontSlider.value = AppState.activeSession.settings.fontSize;
+        buildReader();
+    });
+    
+    settingsContainer.appendChild(fontSizeContainer);
+    settingsContainer.appendChild(bgColorSelectButton);
+    settingsContainer.appendChild(txtColorSelectButton);
+    settingsContainer.appendChild(fontChoiceButton);    
+    settingsContainer.appendChild(statsToggleButton);
+    settingsContainer.appendChild(resetDefaultsButton);
+}
+
+function textColorTLMInit(){
+    const backButton = document.getElementById("b_colorBackText");
+    backButton.addEventListener("pointerup", (e) => {
+        e.stopPropagation();
+        closeTLM("settings");
+    });
+}
+
+function openTXTColor(){
+    buildTXTColor();
+    closeTLM("colorListText");
+}
+function buildTXTColor(){
+    const choiceContainer = document.getElementById("colorChoicesContainerText");
+    choiceContainer.innerHTML = "";
+
+    AppState.activeSession.settings.textColorList.forEach(color => {
+        const colorChoiceContainr = document.createElement("div");
+        colorChoiceContainr.classList.add("colorChoicesContainerText");
+        colorChoiceContainr.classList.add("colorChoice");
+        colorChoiceContainr.id = color;
+
+        const colorText = document.createElement("div");
+        colorText.classList.add("colorText");
+        colorText.innerHTML = color;
+
+        const colorExample = document.createElement("div");
+        colorExample.classList.add("colorExample");
+        colorExample.style.borderColor = color;
+
+        colorChoiceContainr.appendChild(colorText);
+        colorChoiceContainr.appendChild(colorExample);
+
+        if (color == AppState.activeSession.settings.textColor) colorChoiceContainr.classList.add("selectedColor");
+
+        colorChoiceContainr.addEventListener("pointerup", () => {
+            AppState.activeSession.settings.textColor = color;
+            document.documentElement.style.setProperty('--active-reader-text-color', color);
+            updateSavedSettings();
+            updateSaveData();
+            try {
+                colorChoiceContainr.querySelector(".colorChoice.selectedColor").classList.remove("selectedColor");
+            } catch (error) {
+                console.log(error);
+            }   
+            colorChoiceContainr.classList.add("selectedColor");
+        });
+
+        choiceContainer.appendChild(colorChoiceContainr);
+    });
+}
+
+function bgColorTLMInit(){
+    const backButton = document.getElementById("b_colorBackBG");
+    backButton.addEventListener("pointerup", (e) => {
+        e.stopPropagation();
+        closeTLM("settings");
+    });
+}
+
+function openBGColor(){
+    buildBGColor();
+    closeTLM("colorListBG");
+}
+function buildBGColor(){
+    const choiceContainer = document.getElementById("colorChoicesContainerBG");
+    choiceContainer.innerHTML = "";
+
+    AppState.activeSession.settings.bgColorList.forEach(color => {
+        const colorChoiceContainr = document.createElement("div");
+        colorChoiceContainr.classList.add("colorChoicesContainerBG");
+        colorChoiceContainr.classList.add("colorChoice");
+        colorChoiceContainr.id = color;
+
+        const colorText = document.createElement("div");
+        colorText.classList.add("colorText");
+        colorText.innerHTML = color;
+
+        const colorExample = document.createElement("div");
+        colorExample.classList.add("colorExample");
+        colorExample.style.borderColor = color;
+
+        colorChoiceContainr.appendChild(colorText);
+        colorChoiceContainr.appendChild(colorExample);
+
+        if (color == AppState.activeSession.settings.bgColor) colorChoiceContainr.classList.add("selectedColor");
+
+        colorChoiceContainr.addEventListener("pointerup", () => {
+            AppState.activeSession.settings.bgColor = color;
+            document.documentElement.style.setProperty('--active-reader-bg-color', color);
+            updateSavedSettings();
+            updateSaveData();
+            try {
+                choiceContainer.querySelector(".colorChoice.selectedColor").classList.remove("selectedColor");
+            } catch (error) {
+                console.log(error);
+            }              
+            colorChoiceContainr.classList.add("selectedColor");
+        });
+
+        choiceContainer.appendChild(colorChoiceContainr);
+    });
+}
+
+function fontTLMInit(){
+    const backButton = document.getElementById("b_fontBack");
+    backButton.addEventListener("pointerup", (e) => {
+        e.stopPropagation();
+        closeTLM("settings");
+    });
+}
+function openFontSelect(){
+    buildFontSelect();
+    closeTLM("fontList")
+}
+function buildFontSelect(){
+    const fontChoicesContainer = document.getElementById("fontChoicesContainer");
+    fontChoicesContainer.innerHTML = "";
+    fontMap.forEach((value, key) => {
+        const fontChoice = document.createElement("div");
+        fontChoice.classList.add("colorChoice");
+        const fontName = document.createElement("div");
+        fontName.classList.add("colorText");
+        fontName.style.fontFamily = value;
+        fontName.innerHTML = key;
+        fontChoice.appendChild(fontName);
+        if (value == AppState.activeSession.settings.font) fontChoice.classList.add("selectedColor");
+        fontChoice.addEventListener("pointerup", () => {
+            AppState.activeSession.settings.font = value;
+            updateSavedSettings();
+            updateSaveData();
+            document.documentElement.style.setProperty('--active-reader-font', value)
+            try {
+                fontChoicesContainer.querySelector(".colorChoice.selectedColor").classList.remove("selectedColor");
+            } catch (error) {
+                console.log(error);
+            }
+            fontChoice.classList.add("selectedColor")
+        });
+        fontChoicesContainer.appendChild(fontChoice);
+    });
 }
 
 // ========================================================================== //
@@ -730,10 +1132,6 @@ function applyCoverWithFallbacks(targetHtmlElement, seriesName, volumeNumber) {
     tryLoadingImage(targetPaths);
 }
 
-// Stubs for Settings
-function settingsTLMInit(){}
-function textColorTLMInit(){}
-function bgColorTLMInit(){}
 
 // Execute
 main();

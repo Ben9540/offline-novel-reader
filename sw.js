@@ -1,5 +1,5 @@
-const CORE_UI_CACHE = "novel-reader-v6";
-const DATA_CACHE = "volume-downloads-v6";
+const CORE_UI_CACHE = "novel-reader-v7";
+const DATA_CACHE = "volume-downloads-v7";
 
 const essentialFiles = [
     "index.html",
