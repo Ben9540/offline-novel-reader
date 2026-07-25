@@ -1,0 +1,15 @@
+{
+  "volumeName": "Art Book",
+  "chapters": [
+    {
+      "chapterNumber": 1,
+      "title": "Gallery",
+      "content": [
+        "Images/Art/Shadow-Slave/Sunny-on-the-forgotten-shore.jpeg",
+        "Images/Art/Shadow-Slave/I-think-shadow-slave?-haven\u0027t-read-enough-lol.jpeg"
+      ]
+    }
+  ],
+  "volumeNumber": 0,
+  "isArt": true
+}

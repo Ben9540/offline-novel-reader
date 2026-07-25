@@ -94,7 +94,9 @@ async function loadLibraryIndex() {
 
 function mainMenuInit() {
     const searchButton = document.getElementById("menuSearch");
-    if (searchButton) searchButton.addEventListener("pointerup", () => { /* searchNovel(); */ });
+    const searchInput = document.getElementById("mainSearchBar")
+    searchButton.addEventListener("pointerup", () => toggleSearch("mainSearchBar", "mainMenuBooks"));
+    searchInput.addEventListener("input", (e) => filterBooks("mainMenuBooks", e.target.value));
 }
 
 function volumeMenuInit() {
@@ -102,12 +104,36 @@ function volumeMenuInit() {
     const downloadButton = document.getElementById("b_volumeDownload");
     downloadButton.addEventListener("pointerup", () => toggleDownloadMode());
     backButton.addEventListener("pointerup", () => viewSwitcher("mainMenu"));
+    const searchButton = document.getElementById("volumeSearch");
+    const searchInput = document.getElementById("volumeSearchBar")
+    searchButton.addEventListener("pointerup", () => toggleSearch("volumeSearchBar", "volumeMenuBooks"));
+    searchInput.addEventListener("input", (e) => filterBooks("volumeMenuBooks", e.target.value));
 }
 
 function readerInit() {
     document.getElementById("generic-lightbox-overlay").addEventListener("pointerup", (e) => {
         if (e.target.id !== "generic-lightbox-image") closeGenericLightbox();
     });
+   document.getElementById("chapterContent").addEventListener("scrollend", () => {
+        // Clear the timer if the user is still actively scrolling
+        let scrollTimer;
+
+        clearTimeout(scrollTimer);
+        
+        // Set a new timer. If 250ms pass without scrolling, trigger the save.
+        scrollTimer = setTimeout(() => {
+            const scroll = document.getElementById("chapterContent").scrollTop;
+            AppState.activeSession.currentScroll = scroll;
+            console.log("Updated scroll through scroll: " + scroll);
+            updateSaveData();
+        }, 150);
+   });
+    document.getElementById("chapterContent").addEventListener("pointerup", () => {
+        const scroll = document.getElementById("chapterContent").scrollTop;
+        AppState.activeSession.currentScroll = scroll;
+        console.log("Updated scroll through manual: " + scroll);
+        updateSaveData();
+   });
 }
 
 async function allTLMInit() {
@@ -129,6 +155,47 @@ function registerServiceWorker() {
     }
 }
 
+// Toggles the search bar visibility and resets the list when hidden
+function toggleSearch(inputId, containerId) {
+    const searchInput = document.getElementById(inputId);
+    if (searchInput.classList.contains("hidden")) {
+        searchInput.classList.replace("hidden", "active");
+        searchInput.focus();
+        let searchButton;
+        if (containerId == "mainMenuBooks"){
+            searchButton = document.getElementById("menuSearch");
+        } else {
+            searchButton = document.getElementById("volumeSearch");
+        }
+        searchButton.innerHTML = "Back";
+    } else {
+        searchInput.classList.replace("active", "hidden");
+        searchInput.value = ""; 
+        filterBooks(containerId, "");
+        if (containerId == "mainMenuBooks"){
+            searchButton = document.getElementById("menuSearch");
+        } else {
+            searchButton = document.getElementById("volumeSearch");
+        }
+        searchButton.innerHTML = "Search"; 
+    }
+}
+
+// Filters the DOM elements based on text input
+function filterBooks(containerId, query) {
+    const container = document.getElementById(containerId);
+    const books = container.querySelectorAll(".bookAndTitle");
+    
+    books.forEach(book => {
+        const title = book.querySelector(".bookTitle").innerText.toLowerCase();
+        if (title.includes(query.toLowerCase())) {
+            book.style.display = ""; // Show
+        } else {
+            book.style.display = "none"; // Hide
+        }
+    });
+}
+
 // ========================================================================== //
 // 3. STORAGE, CACHING, & OFFLINE SYSTEMS
 // ========================================================================== //
@@ -144,7 +211,8 @@ function getFromLocalStorage(){
 }
 
 function getSaveData(novelName){
-    if (AppState.storedData.novelSaves[novelName] || (novelName == null && AppState.storedData.novelSaves[novelName])){
+    if (AppState.storedData.novelSaves[novelName]){
+        console.log("sucessfully found save data for" + novelName)
         AppState.activeSession.currentVolume = AppState.storedData.novelSaves[novelName].volume;
         AppState.activeSession.currentChapter = AppState.storedData.novelSaves[novelName].chapter;
         AppState.activeSession.currentScroll = AppState.storedData.novelSaves[novelName].scroll;
@@ -237,6 +305,7 @@ async function openVolumeMenu(novel) {
 async function returnToVolume() {
     await buildVolumeMenu(AppState.activeSession.currentNovel);
     closeTLM("none");
+    updateSaveData();
     viewSwitcher("volumeMenu");
 }
 
@@ -244,6 +313,9 @@ async function openReader() {
     await fetchVolume();
     await buildReader();
     viewSwitcher("reader");
+    setTimeout(() => {
+        document.getElementById("chapterContent").scrollTop = AppState.activeSession.currentScroll;
+    }, 10);
 }
 
 async function toggleDownloadMode() {
@@ -281,6 +353,7 @@ async function toggleDownloadMode() {
         searchButton.id = "volumeSearch";
         searchButton.classList.add("b_search");
         searchButton.innerHTML = "Search";
+        searchButton.addEventListener("pointerup", () => toggleSearch("VolumeSearchBar", "volumeMenuBooks"));
 
         pillContainer.appendChild(backButton);
         pillContainer.appendChild(downloadButton);
@@ -587,8 +660,6 @@ async function buildReader() {
             newParagraph.textContent = paragraph;
             chapterContainer.appendChild(newParagraph);
         });
-        getSaveData(AppState.activeSession.currentNovel);
-        chapterContainer.scrollTop = AppState.activeSession.currentScroll;
     }
 }
 
@@ -1079,6 +1150,7 @@ function switchChapter(direction){
     const novelName = AppState.activeSession.currentNovel;
     const volumesList = AppState.library.find(series => series.seriesName === novelName).volumes;
     const volumeNumber = volumesList.find(volume => volume.volumeNumber === AppState.activeSession.currentVolume).volumeNumber;
+    AppState.activeSession.currentScroll = 0;
 
     if (direction == "next"){
         if (AppState.activeSession.loadedVolume.chapters.find(chapter => chapter.chapterNumber === AppState.activeSession.currentChapter + 1) != undefined){

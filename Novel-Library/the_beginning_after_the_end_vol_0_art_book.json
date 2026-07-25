@@ -1,0 +1,19 @@
+{
+  "volumeName": "Art Book",
+  "chapters": [
+    {
+      "chapterNumber": 1,
+      "title": "Gallery",
+      "content": [
+        "Images/Art/The-Beginning-After-the-End/Volume-1-Physical-Cover-(I\u0027m-so-envious-of-the-backers-that-get-the-cool-ones).webp",
+        "Images/Art/The-Beginning-After-the-End/Arthur \u0026 Gideon in Lab, Hardcover Illustration.avif",
+        "Images/Art/The-Beginning-After-the-End/Flying City of Xyrus, Hardcover Illustration.png",
+        "Images/Art/The-Beginning-After-the-End/Tessia \u0026 Arthur in Elenoir, Hardcover Illustration.avif",
+        "Images/Art/The-Beginning-After-the-End/Helstea Manor , Hardcover Illustration.avif",
+        "Images/Art/The-Beginning-After-the-End/Twin Horns \u0026 Arthur, Hardcover Illustration.avif"
+      ]
+    }
+  ],
+  "volumeNumber": 0,
+  "isArt": true
+}

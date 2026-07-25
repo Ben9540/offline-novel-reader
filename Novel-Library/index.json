@@ -4,6 +4,13 @@
     "coverImagePath": "Images/Novel-Covers/Shadow-Slave.jpg",
     "volumes": [
       {
+        "volumeNumber": 0,
+        "volumeTitle": "Art Book",
+        "fileName": "shadow_slave_vol_0_art_book.json",
+        "totalChapters": 1,
+        "coverImagePath": "Images/default_cover.jpg"
+      },
+      {
         "volumeNumber": 1,
         "volumeTitle": "Volume 1 - Child of Shadows",
         "fileName": "shadow_slave_vol_1_volume_1___child_of_shadows.json",
@@ -169,6 +176,13 @@
     "seriesName": "The Beginning After the End",
     "coverImagePath": "Images/Novel-Covers/The-Beginning-After-the-End.jpg",
     "volumes": [
+      {
+        "volumeNumber": 0,
+        "volumeTitle": "Art Book",
+        "fileName": "the_beginning_after_the_end_vol_0_art_book.json",
+        "totalChapters": 1,
+        "coverImagePath": "Images/default_cover.jpg"
+      },
       {
         "volumeNumber": 1,
         "volumeTitle": "Early Years - Volume 1",
