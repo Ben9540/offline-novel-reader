@@ -847,6 +847,7 @@ async function buildChapterSelect(){
 
         chapterChoice.addEventListener("pointerup", () => {
             AppState.activeSession.currentChapter = i;
+            AppState.activeSession.currentScroll = 0;
             updateSaveData();
             closeTLM("none");
             openReader();
@@ -1151,11 +1152,12 @@ function switchChapter(direction){
     const volumesList = AppState.library.find(series => series.seriesName === novelName).volumes;
     const volumeNumber = volumesList.find(volume => volume.volumeNumber === AppState.activeSession.currentVolume).volumeNumber;
     AppState.activeSession.currentScroll = 0;
+    updateSaveData();
 
     if (direction == "next"){
         if (AppState.activeSession.loadedVolume.chapters.find(chapter => chapter.chapterNumber === AppState.activeSession.currentChapter + 1) != undefined){
             AppState.activeSession.currentChapter += 1;
-            updateSaveData(); buildMainTLM(); buildReader();
+            updateSaveData(); buildMainTLM(); openReader();
         } else if (volumeNumber < volumesList.length){
             AppState.activeSession.currentChapter += 1;
             AppState.activeSession.currentVolume += 1;
@@ -1164,7 +1166,7 @@ function switchChapter(direction){
     } else if (direction == "previous"){
         if (AppState.activeSession.loadedVolume.chapters.find(chapter => chapter.chapterNumber === AppState.activeSession.currentChapter - 1) != undefined){
             AppState.activeSession.currentChapter -= 1;
-            updateSaveData(); buildMainTLM(); buildReader();
+            updateSaveData(); buildMainTLM(); openReader();
         } else if (volumeNumber > 0){
             AppState.activeSession.currentChapter -= 1;
             AppState.activeSession.currentVolume -= 1;
